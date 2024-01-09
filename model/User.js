@@ -34,6 +34,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    profile_picture: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
