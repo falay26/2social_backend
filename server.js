@@ -42,6 +42,11 @@ app.use("/resend_register_otp", require("./routes/auth/resend_register_otp"));
 app.use("/login", require("./routes/auth/auth"));
 app.use("/confirm_login_otp", require("./routes/auth/confirm_login_otp"));
 app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
+
+//For Admin
+//Users
+app.use("/get_all_users", require("./routes/admin/get_all_users"));
+
 /*
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
