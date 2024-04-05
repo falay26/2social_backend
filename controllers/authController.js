@@ -191,6 +191,7 @@ const confirmLoginOtp = async (req, res) => {
           phone: foundUser.phone,
           profile_picture: foundUser.profile_picture,
           _id: foundUser._id,
+          login_otp: foundUser.login_otp,
         },
       });
     } else {
