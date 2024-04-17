@@ -46,6 +46,16 @@ app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
 //For Admin
 //Users
 app.use("/get_all_users", require("./routes/admin/get_all_users"));
+//Titles
+app.use("/get_all_titles", require("./routes/admin/title/get_all"));
+app.use("/add_title", require("./routes/admin/title/add"));
+app.use("/update_title", require("./routes/admin/title/update"));
+app.use("/delete_title", require("./routes/admin/title/delete"));
+//Types
+app.use("/get_all_types", require("./routes/admin/type/get_all"));
+app.use("/add_type", require("./routes/admin/type/add"));
+app.use("/update_type", require("./routes/admin/type/update"));
+app.use("/delete_type", require("./routes/admin/type/delete"));
 
 /*
 app.use("/refresh", require("./routes/refresh"));
