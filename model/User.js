@@ -38,6 +38,24 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    premium: {
+      type: Boolean,
+      default: false,
+    },
+    premium_start: {
+      type: Date,
+    },
+    premium_end: {
+      type: Date,
+    },
+    badges: {
+      type: Array,
+      default: [],
+    },
+    suspended_until: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
