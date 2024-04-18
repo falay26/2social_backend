@@ -107,6 +107,7 @@ const handleLogin = async (req, res) => {
 
       res.status(200).json({
         status: 200,
+        otp: otp, //TODO: delete this later..
         message: `Otp gönderildi!`,
       });
     }
