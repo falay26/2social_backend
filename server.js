@@ -56,6 +56,11 @@ app.use("/get_all_types", require("./routes/admin/type/get_all"));
 app.use("/add_type", require("./routes/admin/type/add"));
 app.use("/update_type", require("./routes/admin/type/update"));
 app.use("/delete_type", require("./routes/admin/type/delete"));
+//Categories
+app.use("/get_all_categories", require("./routes/admin/category/get_all"));
+app.use("/add_category", require("./routes/admin/category/add"));
+app.use("/update_category", require("./routes/admin/category/update"));
+app.use("/delete_category", require("./routes/admin/category/delete"));
 
 /*
 app.use("/refresh", require("./routes/refresh"));
