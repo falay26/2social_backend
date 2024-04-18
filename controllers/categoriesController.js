@@ -2,7 +2,25 @@ const Category = require("../model/Category");
 
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.aggregate([
+      { $match: { _id: { $exists: true } } },
+      {
+        $lookup: {
+          from: "titles",
+          localField: "title_id",
+          foreignField: "_id",
+          as: "title_info",
+        },
+      },
+      {
+        $lookup: {
+          from: "types",
+          localField: "type_id",
+          foreignField: "_id",
+          as: "type_info",
+        },
+      },
+    ]);
 
     res.status(200).json({
       status: 200,
