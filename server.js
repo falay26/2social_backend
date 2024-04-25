@@ -43,6 +43,10 @@ app.use("/login", require("./routes/auth/auth"));
 app.use("/confirm_login_otp", require("./routes/auth/confirm_login_otp"));
 app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
 
+//For Mobile
+app.use("/create_post", require("./routes/mobile/post/create"));
+app.use("/create_comment", require("./routes/mobile/comment/create"));
+
 //For Admin
 //Users
 app.use("/get_all_users", require("./routes/admin/get_all_users"));
