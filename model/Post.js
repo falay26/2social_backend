@@ -27,6 +27,9 @@ const postSchema = new Schema(
       type: Array,
       default: [],
     },
+    owner_id: {
+      type: ObjectId,
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
