@@ -22,6 +22,12 @@ const categorySchema = new Schema(
     step_number: {
       type: Number,
     },
+    daily_limit: {
+      type: Number,
+    },
+    icon: {
+      type: String,
+    },
     owners: {
       type: Array,
       default: [],

@@ -39,8 +39,27 @@ const getUser = async (req, res) => {
   res.json(user);
 };
 
+const changeLanguage = async (req, res) => {
+  const { user_id, language_code } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    user.preferred_language = language_code;
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Kullanıcı dil tercihi güncellendi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   deleteUser,
   getUser,
+  changeLanguage,
 };

@@ -52,9 +52,21 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    following: {
+      type: Array,
+      default: [],
+    },
+    followers: {
+      type: Array,
+      default: [],
+    },
     suspended_until: {
       type: Date,
       default: null,
+    },
+    preferred_language: {
+      type: String,
+      default: "tr",
     },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

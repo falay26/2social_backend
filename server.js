@@ -47,6 +47,8 @@ app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
 app.use("/create_post", require("./routes/mobile/post/create"));
 app.use("/timeline", require("./routes/mobile/post/timeline"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
+//User related
+app.use("/change_language", require("./routes/mobile/user/change_language"));
 
 //For Admin
 //Users
