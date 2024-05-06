@@ -1,6 +1,7 @@
 const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const User = require("../model/User");
+//Formatters
 const postFormatter = require("../helpers/postFormatter");
 
 const createPost = async (req, res) => {
@@ -48,6 +49,7 @@ const getTimeline = async (req, res) => {
   const { user_id } = req.body;
 
   try {
+    //TODO: user's followings and user's attended categories.
     const user = await User.findOne({ _id: user_id });
     const posts = await Post.aggregate([
       { $match: { _id: { $exists: true }, owner_id: { $ne: user_id } } },

@@ -1,4 +1,10 @@
 const Category = require("../model/Category");
+const User = require("../model/User");
+const Type = require("../model/Type");
+const Title = require("../model/Title");
+//Formatters
+const typeFormatter = require("../helpers/typeFormatter");
+const titleFormatter = require("../helpers/titleFormatter");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -100,9 +106,40 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const getCategoriesMobile = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const types = await Type.find();
+    const titles = await Title.aggregate([
+      { $match: { _id: { $exists: true } } },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "title_id",
+          as: "categories_info",
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 200,
+      categories: [], //TODO: get from users attended categories; id, icon, name
+      types: typeFormatter(types, user),
+      titles: titleFormatter(titles, user),
+      message: `Kategoriler başarı ile döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllCategories,
   addCategory,
   updateCategory,
   deleteCategory,
+  getCategoriesMobile,
 };

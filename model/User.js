@@ -60,6 +60,14 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    in_categories: {
+      type: Array,
+      default: [],
+    },
+    favourite_categories: {
+      type: Array,
+      default: [],
+    },
     suspended_until: {
       type: Date,
       default: null,
