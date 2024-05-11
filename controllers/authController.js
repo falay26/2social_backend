@@ -133,7 +133,7 @@ const confirmLoginOtp = async (req, res) => {
         message: "Kullanıcı bulunamadı.",
       });
 
-    if (foundUser.login_otp === otp) {
+    if (foundUser.login_otp.toString() === otp.toString()) {
       const roles = Object.values(foundUser.roles).filter(Boolean);
 
       const accessToken = jwt.sign(

@@ -48,6 +48,8 @@ app.use("/create_post", require("./routes/mobile/post/create"));
 app.use("/timeline", require("./routes/mobile/post/timeline"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
 app.use("/categories", require("./routes/mobile/categories"));
+app.use("/notifications", require("./routes/mobile/notification/get"));
+app.use("/read_notifications", require("./routes/mobile/notification/read"));
 //User related
 app.use("/change_language", require("./routes/mobile/user/change_language"));
 app.use("/unfollow_user", require("./routes/mobile/user/unfollow_user"));
