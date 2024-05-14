@@ -12,6 +12,7 @@ const titleFormatter = (array, user) => {
           title: j?.name[user?.preferred_language],
           desc: j?.description[user?.preferred_language],
           limit: j?.step_number,
+          backPhoto: j?.image,
           photos: [], //TODO: get some users..
           totalCount: j?.owners?.length,
           favourite: user?.favourite_categories?.includes(j?._id),
