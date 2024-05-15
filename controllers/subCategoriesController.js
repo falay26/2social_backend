@@ -41,12 +41,13 @@ const getAllCategories = async (req, res) => {
 };
 
 const addCategory = async (req, res) => {
-  const { title_id, type_id, name, description, image } = req.body;
+  const { title_id, type_id, category_id, name, description, image } = req.body;
 
   try {
     await SubCategory.create({
       title_id: title_id,
       type_id: type_id,
+      category_id: category_id,
       name: name,
       description: description,
       image: image,
@@ -62,12 +63,21 @@ const addCategory = async (req, res) => {
 };
 
 const updateCategory = async (req, res) => {
-  const { category_id, title_id, type_id, name, description, image } = req.body;
+  const {
+    sub_category_id,
+    title_id,
+    type_id,
+    category_id,
+    name,
+    description,
+    image,
+  } = req.body;
 
   try {
-    const category = await SubCategory.findOne({ _id: category_id });
+    const category = await SubCategory.findOne({ _id: sub_category_id });
     category.title_id = title_id;
     category.type_id = type_id;
+    category.category_id = category_id;
     category.name = name;
     category.description = description;
     category.image = image;
