@@ -1,11 +1,4 @@
 const SubCategory = require("../model/SubCategory");
-const Category = require("../model/Category");
-const User = require("../model/User");
-const Type = require("../model/Type");
-const Title = require("../model/Title");
-//Formatters
-const typeFormatter = require("../helpers/typeFormatter");
-const titleFormatter = require("../helpers/titleFormatter");
 
 const getAllCategories = async (req, res) => {
   try {
