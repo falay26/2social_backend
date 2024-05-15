@@ -72,6 +72,14 @@ app.use("/get_all_categories", require("./routes/admin/category/get_all"));
 app.use("/add_category", require("./routes/admin/category/add"));
 app.use("/update_category", require("./routes/admin/category/update"));
 app.use("/delete_category", require("./routes/admin/category/delete"));
+//SubCategories
+app.use(
+  "/get_all_sub_categories",
+  require("./routes/admin/sub_category/get_all")
+);
+app.use("/add_sub_category", require("./routes/admin/sub_category/add"));
+app.use("/update_sub_category", require("./routes/admin/sub_category/update"));
+app.use("/delete_sub_category", require("./routes/admin/sub_category/delete"));
 
 /*
 app.use("/refresh", require("./routes/refresh"));
