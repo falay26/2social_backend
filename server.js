@@ -80,6 +80,11 @@ app.use(
 app.use("/add_sub_category", require("./routes/admin/sub_category/add"));
 app.use("/update_sub_category", require("./routes/admin/sub_category/update"));
 app.use("/delete_sub_category", require("./routes/admin/sub_category/delete"));
+//Badges
+app.use("/get_all_categories", require("./routes/admin/badge/get_all"));
+app.use("/add_category", require("./routes/admin/badge/add"));
+app.use("/update_category", require("./routes/admin/badge/update"));
+app.use("/delete_category", require("./routes/admin/badge/delete"));
 
 /*
 app.use("/refresh", require("./routes/refresh"));
