@@ -52,7 +52,12 @@ const getTimeline = async (req, res) => {
     //TODO: user's followings and user's attended categories.
     const user = await User.findOne({ _id: user_id });
     const posts = await Post.aggregate([
-      { $match: { _id: { $exists: true }, owner_id: { $ne: user_id } } },
+      {
+        $match: {
+          _id: { $exists: true },
+          owner_id: { $nin: user.blockeds.concat(user_id) },
+        },
+      },
       {
         $lookup: {
           from: "comments",

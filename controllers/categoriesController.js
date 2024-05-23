@@ -1,4 +1,5 @@
 const Category = require("../model/Category");
+const SubCategory = require("../model/SubCategory");
 const User = require("../model/User");
 const Type = require("../model/Type");
 const Title = require("../model/Title");
@@ -136,10 +137,44 @@ const getCategoriesMobile = async (req, res) => {
   }
 };
 
+const getCategoryDetail = async (req, res) => {
+  const { user_id, category_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const sub_categories = await SubCategory.find({ category_id: category_id });
+    const participants = await User.find({
+      _id: {
+        $in: user.in_sub_categories
+          .filter((i) => i.category_id === category_id)
+          .map((i) => {
+            return i.participants;
+          }),
+      },
+    });
+
+    //TODO: format here.
+    res.status(200).json({
+      status: 200,
+      user_finished: user.in_sub_categories
+        .filter((i) => i.category_id === category_id)
+        .map((i) => {
+          return i.sub_category_id;
+        }),
+      sub_categories: sub_categories,
+      participants: participants,
+      message: `Kategoriler başarı ile döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllCategories,
   addCategory,
   updateCategory,
   deleteCategory,
   getCategoriesMobile,
+  getCategoryDetail,
 };

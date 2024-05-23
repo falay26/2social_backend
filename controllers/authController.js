@@ -19,6 +19,7 @@ const handleLogin = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
+      deleted: false,
     }).exec();
     if (!foundUser)
       return res.status(200).json({
@@ -126,6 +127,7 @@ const confirmLoginOtp = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
+      deleted: false,
     }).exec();
     if (!foundUser)
       return res.status(200).json({
@@ -214,6 +216,7 @@ const resendLoginOtp = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
+      deleted: false,
     }).exec();
 
     let otp = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);

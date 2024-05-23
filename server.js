@@ -48,11 +48,33 @@ app.use("/create_post", require("./routes/mobile/post/create"));
 app.use("/timeline", require("./routes/mobile/post/timeline"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
 app.use("/categories", require("./routes/mobile/categories"));
+app.use("/category_detail", require("./routes/mobile/category_detail"));
 app.use("/notifications", require("./routes/mobile/notification/get"));
 app.use("/read_notifications", require("./routes/mobile/notification/read"));
+app.use("/career", require("./routes/mobile/badge/get"));
+app.use("/support", require("./routes/mobile/support/create"));
 //User related
 app.use("/change_language", require("./routes/mobile/user/change_language"));
 app.use("/unfollow_user", require("./routes/mobile/user/unfollow_user"));
+app.use("/add_reminder", require("./routes/mobile/user/add_reminder"));
+app.use(
+  "/invite_participant",
+  require("./routes/mobile/user/invite_participant")
+);
+app.use(
+  "/accept_participant",
+  require("./routes/mobile/user/accept_participant")
+);
+app.use(
+  "/remove_participant",
+  require("./routes/mobile/user/remove_participant")
+);
+app.use("/update_user", require("./routes/mobile/user/update_user"));
+app.use("/certificates", require("./routes/mobile/user/certificates"));
+app.use("/get_blockeds", require("./routes/mobile/user/get_blockeds"));
+app.use("/block_user", require("./routes/mobile/user/block_user"));
+app.use("/unblock_user", require("./routes/mobile/user/unblock_user"));
+app.use("/delete_profile", require("./routes/mobile/user/delete_profile"));
 
 //For Admin
 //Users

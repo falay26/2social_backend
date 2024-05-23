@@ -24,6 +24,18 @@ const userSchema = new Schema(
     surname: {
       type: String,
     },
+    city_id: {
+      type: String,
+      default: "",
+    },
+    email: {
+      type: String,
+      default: "",
+    },
+    email_verified: {
+      type: Boolean,
+      default: false,
+    },
     register_otp: {
       type: String,
     },
@@ -48,6 +60,10 @@ const userSchema = new Schema(
     premium_end: {
       type: Date,
     },
+    blockeds: {
+      type: Array,
+      default: [],
+    },
     badges: {
       type: Array,
       default: [],
@@ -64,7 +80,15 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    in_sub_categories: {
+      type: Array,
+      default: [],
+    },
     favourite_categories: {
+      type: Array,
+      default: [],
+    },
+    reminders: {
       type: Array,
       default: [],
     },
@@ -75,6 +99,14 @@ const userSchema = new Schema(
     preferred_language: {
       type: String,
       default: "tr",
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    delete_reasons: {
+      type: Array,
+      default: [],
     },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

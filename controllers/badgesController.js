@@ -1,4 +1,7 @@
 const Badge = require("../model/Badge");
+const User = require("../model/User");
+const Category = require("../model/Category");
+const Post = require("../model/Post");
 
 const getAllBadges = async (req, res) => {
   try {
@@ -80,9 +83,46 @@ const deleteBadge = async (req, res) => {
   }
 };
 
+const getCareer = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const badges = await Badge.find();
+    const categories = await Category.find({
+      _id: {
+        $in: user.in_categories,
+      },
+    });
+    const new_categories = await Promise.all(
+      categories.map(async (category) => {
+        let new_obj = category;
+        const posts = await Post.find({
+          owner_id: user_id,
+          category_id: category.id,
+        });
+        new_obj.posts = posts;
+        return posts;
+      })
+    );
+
+    //TODO: format here.
+    res.status(200).json({
+      status: 200,
+      badges: badges,
+      users_badges: user.badges,
+      categories: new_categories,
+      message: `Kariyer sayfası başarıyla dönüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllBadges,
   addBadge,
   updateBadge,
   deleteBadge,
+  getCareer,
 };
