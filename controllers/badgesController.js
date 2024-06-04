@@ -2,6 +2,10 @@ const Badge = require("../model/Badge");
 const User = require("../model/User");
 const Category = require("../model/Category");
 const Post = require("../model/Post");
+const mongoose = require("mongoose");
+//Formatters
+const badgeFormatter = require("../helpers/badgeFormatter");
+const categoryFormatter = require("../helpers/categoryFormatter");
 
 const getAllBadges = async (req, res) => {
   try {
@@ -89,11 +93,24 @@ const getCareer = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
     const badges = await Badge.find();
-    const categories = await Category.find({
-      _id: {
-        $in: user.in_categories,
+
+    const categories = await Category.aggregate([
+      {
+        $match: {
+          _id: {
+            $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
+          },
+        },
       },
-    });
+      {
+        $lookup: {
+          from: "types",
+          localField: "type_id",
+          foreignField: "_id",
+          as: "type_info",
+        },
+      },
+    ]);
     const new_categories = await Promise.all(
       categories.map(async (category) => {
         let new_obj = category;
@@ -106,12 +123,10 @@ const getCareer = async (req, res) => {
       })
     );
 
-    //TODO: format here.
     res.status(200).json({
       status: 200,
-      badges: badges,
-      users_badges: user.badges,
-      categories: new_categories,
+      badges: badgeFormatter(badges, user),
+      categories: categoryFormatter(new_categories, user, 0),
       message: `Kariyer sayfası başarıyla dönüldü!`,
     });
   } catch (err) {

@@ -7,7 +7,7 @@ const postFormatter = (array, user) => {
       id: item?._id,
       name: item?.user?.name,
       profilePhoto: item?.user?.profile_picture,
-      category: item?.category[0]?.name[user[0]?.preferred_language],
+      category: item?.category[0]?.name[user?.preferred_language],
       categoryIcon: item?.category[0]?.icon,
       follow: user?.following?.includes(item?.user[0]?._id),
       official: item?.user?.premium,

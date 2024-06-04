@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
+//Models
 const User = require("../model/User");
+const Notification = require("../model/Notification");
+//Formatters
+const notificationFormatter = require("../helpers/notificationFormatter");
 //FCM
 var FCM = require("fcm-node");
 var serverKey = process.env.FIREBASE_SERVER_KEY;
 var fcm = new FCM(serverKey);
-//Notification
-const Notification = require("../model/Notification");
 
 const getNotifications = async (req, res) => {
   const { user_id } = req.body;
@@ -39,7 +41,7 @@ const getNotifications = async (req, res) => {
     res.status(200).json({
       status: 200,
       message: "Bildirimler başarıyla bulundu!",
-      data: notifications,
+      data: notificationFormatter(notifications),
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });

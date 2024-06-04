@@ -38,7 +38,7 @@ const createComment = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: `Gönderi başarı ile paylaşıldı!`,
+      message: `Yorum başarı ile paylaşıldı!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -49,7 +49,6 @@ const getTimeline = async (req, res) => {
   const { user_id } = req.body;
 
   try {
-    //TODO: user's followings and user's attended categories.
     const user = await User.findOne({ _id: user_id });
     const posts = await Post.aggregate([
       {

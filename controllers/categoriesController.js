@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+//Models
 const Category = require("../model/Category");
 const SubCategory = require("../model/SubCategory");
 const User = require("../model/User");
@@ -6,6 +8,7 @@ const Title = require("../model/Title");
 //Formatters
 const typeFormatter = require("../helpers/typeFormatter");
 const titleFormatter = require("../helpers/titleFormatter");
+const categoryFormatter = require("../helpers/categoryFormatter");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -113,6 +116,11 @@ const getCategoriesMobile = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
     const types = await Type.find();
+    const categories = await Category.find({
+      _id: {
+        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
+      },
+    });
     const titles = await Title.aggregate([
       { $match: { _id: { $exists: true } } },
       {
@@ -127,7 +135,7 @@ const getCategoriesMobile = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      categories: [], //TODO: get from users attended categories; id, icon, name
+      categories: categoryFormatter(categories, user, 1),
       types: typeFormatter(types, user),
       titles: titleFormatter(titles, user),
       message: `Kategoriler başarı ile döndürüldü!`,
@@ -148,12 +156,12 @@ const getCategoryDetail = async (req, res) => {
         $in: user.in_sub_categories
           .filter((i) => i.category_id === category_id)
           .map((i) => {
-            return i.participants;
+            return i.participants.map((j) => mongoose.Types.ObjectId(j));
           }),
       },
     });
 
-    //TODO: format here.
+    //TODO:
     res.status(200).json({
       status: 200,
       user_finished: user.in_sub_categories

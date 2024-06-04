@@ -1,4 +1,9 @@
+const mongoose = require("mongoose");
+//Models
 const User = require("../model/User");
+//Formatters
+const categoryFormatter = require("../helpers/categoryFormatter");
+const userFormatter = require("../helpers/userFormatter");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -72,7 +77,15 @@ const addReminder = async (req, res) => {
         last_reminded: new Date.now(),
       });
     } else {
-      //Already added.
+      user.reminders = user.reminders.map((i) => {
+        if (i.category_id === category_id) {
+          let new_obj = i;
+          i.day_number = day_number;
+          return new_obj;
+        } else {
+          return i;
+        }
+      });
     }
 
     await user.save();
@@ -94,7 +107,7 @@ const inviteParticipant = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      message: `Kullanıcı dil tercihi güncellendi!`,
+      message: `Kullanıcı başarıyla davet edildi!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -195,7 +208,7 @@ const getCertificates = async (req, res) => {
     const user = await User.findOne({ _id: user_id });
     const categories = await Category.find({
       _id: {
-        $in: user.in_categories,
+        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
       },
     });
 
@@ -203,8 +216,8 @@ const getCertificates = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      certificates: categories, //TODO: dummy.
-      message: `Sertifikalar başarıyla döndürüldü!`,
+      certificates: categoryFormatter(categories, user, 2),
+      message: `Kullanıcının sertifikaları başarıyla döndürüldü!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -218,7 +231,7 @@ const getBlockeds = async (req, res) => {
     const user = await User.findOne({ _id: user_id });
     const users = await User.find({
       _id: {
-        $in: user.blockeds,
+        $in: user.blockeds.map((i) => mongoose.Types.ObjectId(i)),
       },
     });
 
@@ -226,7 +239,7 @@ const getBlockeds = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      users: users, //TODO: dummy.
+      users: userFormatter(users), //TODO: dummy.
       message: `Engellenenler başarıyla döndürüldü!`,
     });
   } catch (err) {
