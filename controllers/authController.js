@@ -19,10 +19,10 @@ const handleLogin = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
-      deleted: false,
+      //deleted: false,
     }).exec();
     if (!foundUser)
-      return res.status(200).json({
+      return res.status(409).json({
         status: 409,
         message: "Kullanıcı bulunamadı.",
       });
