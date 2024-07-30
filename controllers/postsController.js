@@ -3,6 +3,7 @@ const Comment = require("../model/Comment");
 const User = require("../model/User");
 //Formatters
 const postFormatter = require("../helpers/postFormatter");
+const commentFormatter = require("../helpers/commentFormatter");
 
 const createPost = async (req, res) => {
   const { content, image, users, category_id, public, user_id } = req.body;
@@ -93,4 +94,38 @@ const getTimeline = async (req, res) => {
   }
 };
 
-module.exports = { createPost, createComment, getTimeline };
+const getComments = async (req, res) => {
+  const { post_id, user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const comments = await Comment.aggregate([
+      {
+        $match: {
+          post_id: post_id,
+          user_id: {
+            $nin: user.blockeds.map((i) => mongoose.Types.ObjectId(i)),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 200,
+      comments: commentFormatter(comments),
+      message: `Yorumlar başarı ile dönüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+module.exports = { createPost, createComment, getTimeline, getComments };

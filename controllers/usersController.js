@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 //Models
 const User = require("../model/User");
+const SubCategories = require("../model/SubCategory");
 //Formatters
 const categoryFormatter = require("../helpers/categoryFormatter");
 const userFormatter = require("../helpers/userFormatter");
@@ -31,6 +32,31 @@ const changeLanguage = async (req, res) => {
     res.status(200).json({
       status: 200, //TODO: maybe return user.
       message: `Kullanıcı dil tercihi güncellendi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const followUser = async (req, res) => {
+  const { user_id, followed_user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    if (user.following.includes(followed_user_id)) {
+      res.status(400).json({
+        status: 400,
+        message: `Bu kullanıcıyı zaten takip ediyorsun!`,
+      });
+    } else {
+      user.following = user.following.concat([followed_user_id]);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200, //TODO: maybe return user.
+      message: `Kullanıcı başarıyla takip edildi!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -317,9 +343,84 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+const selectActivity = async (req, res) => {
+  const { user_id, category_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+
+    let olds = user.in_categories.map((i) => i.category_id);
+    if (olds.length === 0) {
+      let all_sub_categories = SubCategories.find({});
+      let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
+      let new_sub_category = all_sub_categories[random - 1];
+
+      user.in_sub_categories = user.in_sub_categories.concat([
+        {
+          category_id: category_id,
+          participants: [],
+          sub_categories: [new_sub_category],
+        },
+      ]);
+      await user.save();
+
+      res.status(201).json({
+        status: 201,
+        sub_category: new_sub_category,
+        new: true,
+        message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez giriyor)`,
+      });
+    } else {
+      let all_sub_categories = SubCategories.find({
+        _id: { $nin: olds.map((i) => mongoose.Types.ObjectId(i)) },
+      });
+      let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
+      let new_sub_category = all_sub_categories[random - 1];
+
+      user.in_sub_categories = user.in_sub_categories.concat([
+        new_sub_category._id,
+      ]);
+      await user.save();
+
+      res.status(200).json({
+        status: 200,
+        sub_category: new_sub_category,
+        new: false,
+        message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const getFollwings = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const users = await User.find({
+      _id: {
+        $in: user.following.map((i) => mongoose.Types.ObjectId(i)),
+      },
+    });
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      users: userFormatter(users), //TODO: dummy.
+      message: `Takip edilenler başarıyla döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   changeLanguage,
+  followUser,
   unfollowUser,
   addReminder,
   inviteParticipant,
@@ -331,4 +432,6 @@ module.exports = {
   blockUser,
   unblockUser,
   deleteProfile,
+  selectActivity,
+  getFollwings,
 };

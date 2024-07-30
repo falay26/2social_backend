@@ -19,7 +19,7 @@ const handleLogin = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
-      //deleted: false,
+      //deleted: false, //TODO: add this to every user..
     }).exec();
     if (!foundUser)
       return res.status(409).json({

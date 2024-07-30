@@ -55,6 +55,7 @@ app.use("/career", require("./routes/mobile/badge/get"));
 app.use("/support", require("./routes/mobile/support/create"));
 //User related
 app.use("/change_language", require("./routes/mobile/user/change_language"));
+app.use("/follow_user", require("./routes/mobile/user/follow_user"));
 app.use("/unfollow_user", require("./routes/mobile/user/unfollow_user"));
 app.use("/add_reminder", require("./routes/mobile/user/add_reminder"));
 app.use(
@@ -75,6 +76,10 @@ app.use("/get_blockeds", require("./routes/mobile/user/get_blockeds"));
 app.use("/block_user", require("./routes/mobile/user/block_user"));
 app.use("/unblock_user", require("./routes/mobile/user/unblock_user"));
 app.use("/delete_profile", require("./routes/mobile/user/delete_profile"));
+app.use("/select_activity", require("./routes/mobile/user/select_activity"));
+app.use("/get_followings", require("./routes/mobile/user/get_followings"));
+app.use("/report_user", require("./routes/mobile/report/report_user"));
+app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
 
 //For Admin
 //Users

@@ -164,11 +164,9 @@ const getCategoryDetail = async (req, res) => {
     //TODO:
     res.status(200).json({
       status: 200,
-      user_finished: user.in_sub_categories
-        .filter((i) => i.category_id === category_id)
-        .map((i) => {
-          return i.sub_category_id;
-        }),
+      user_finished: user.in_sub_categories.filter(
+        (i) => i.category_id === category_id
+      )[0].sub_categories,
       sub_categories: sub_categories,
       participants: participants,
       message: `Kategoriler başarı ile döndürüldü!`,
