@@ -349,12 +349,12 @@ const selectActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    let olds = user?.in_categories.map((i) => i.category_id);
+    let olds = user?.in_categories.map((i) => i);
+    console.log(olds);
     if (olds?.length === 0) {
       let all_sub_categories = await SubCategories.find({
         category_id: mongoose.Types.ObjectId(category_id),
       });
-      console.log(all_sub_categories);
       let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
       let new_sub_category = all_sub_categories[random - 1];
 
@@ -365,10 +365,10 @@ const selectActivity = async (req, res) => {
           sub_categories: [new_sub_category],
         },
       ]);
-      if (olds === undefined) {
-        user.in_categories = [category_id];
-      }
+      user.in_categories = [category_id];
 
+      user.markModified("in_cetagories");
+      user.markModified("in_sub_cetagories");
       await user.save();
 
       res.status(201).json({
@@ -378,15 +378,21 @@ const selectActivity = async (req, res) => {
         message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez giriyor)`,
       });
     } else {
-      let all_sub_categories = SubCategories.find({
-        _id: { $nin: olds.map((i) => mongoose.Types.ObjectId(i)) },
+      let all_sub_categories = await SubCategories.find({
+        _id: {
+          $nin: olds.filter((i) => i === category_id),
+        },
       });
+      console.log(all_sub_categories);
       let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
       let new_sub_category = all_sub_categories[random - 1];
 
       user.in_sub_categories = user.in_sub_categories.concat([
         new_sub_category._id,
       ]);
+
+      user.markModified("in_cetagories");
+      user.markModified("in_sub_cetagories");
       await user.save();
 
       res.status(200).json({
