@@ -349,8 +349,8 @@ const selectActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    let olds = user.in_categories.map((i) => i.category_id);
-    if (olds.length === 0) {
+    let olds = user?.in_categories.map((i) => i.category_id);
+    if (olds?.length === 0) {
       let all_sub_categories = SubCategories.find({
         category_id: mongoose.Types.ObjectId(category_id),
       });
@@ -364,6 +364,9 @@ const selectActivity = async (req, res) => {
           sub_categories: [new_sub_category],
         },
       ]);
+      if (olds === undefined) {
+        user.in_categories = [category_id];
+      }
       await user.save();
 
       res.status(201).json({
