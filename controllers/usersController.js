@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 //Models
 const User = require("../model/User");
+const Category = require("../model/Category");
 const SubCategories = require("../model/SubCategory");
 //Formatters
 const categoryFormatter = require("../helpers/categoryFormatter");
@@ -350,7 +351,6 @@ const selectActivity = async (req, res) => {
     const user = await User.findOne({ _id: user_id });
 
     let olds = user?.in_categories.map((i) => i);
-    console.log(olds);
     if (olds?.length === 0) {
       let all_sub_categories = await SubCategories.find({
         category_id: mongoose.Types.ObjectId(category_id),
@@ -383,7 +383,6 @@ const selectActivity = async (req, res) => {
           $nin: olds.filter((i) => i === category_id),
         },
       });
-      console.log(all_sub_categories);
       let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
       let new_sub_category = all_sub_categories[random - 1];
 
@@ -407,12 +406,12 @@ const selectActivity = async (req, res) => {
   }
 };
 
-const getFollwings = async (req, res) => {
+const getFollowings = async (req, res) => {
   const { user_id } = req.body;
 
   try {
-    const user = await User.findOne({ _id: user_id });
-    const users = await User.find({
+    let user = await User.findOne({ _id: user_id });
+    let users = await User.find({
       _id: {
         $in: user.following.map((i) => mongoose.Types.ObjectId(i)),
       },
@@ -424,6 +423,27 @@ const getFollwings = async (req, res) => {
       status: 200,
       users: userFormatter(users), //TODO: dummy.
       message: `Takip edilenler başarıyla döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const getUsersCategories = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    let user = await User.findOne({ _id: user_id });
+    let categories = await Category.find({
+      _id: {
+        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
+      },
+    });
+
+    res.status(200).json({
+      status: 200,
+      categories: categoryFormatter(categories, user, 2),
+      message: `Kullanıcının bulunduğu kategoriler başarıyla döndürüldü!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -446,5 +466,6 @@ module.exports = {
   unblockUser,
   deleteProfile,
   selectActivity,
-  getFollwings,
+  getFollowings,
+  getUsersCategories,
 };

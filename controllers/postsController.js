@@ -27,6 +27,57 @@ const createPost = async (req, res) => {
   }
 };
 
+const likePost = async (req, res) => {
+  const { post_id, user_id } = req.body;
+
+  try {
+    const post = await Post.findOne({
+      _id: post_id,
+    }).exec();
+
+    if (post.likes.includes(user_id)) {
+      res.status(400).json({
+        status: 400,
+        message: `Gönderi zaten beğenilmiş!`,
+      });
+    }
+    post.likes = post.likes.concat([user_id]);
+    await post.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Gönderi başarı ile beğenildi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const unlikePost = async (req, res) => {
+  const { post_id, user_id } = req.body;
+
+  try {
+    const post = await Post.findOne({
+      _id: post_id,
+    }).exec();
+
+    if (post.likes.includes(user_id)) {
+      post.likes = post.likes.filter((i) => i !== user_id);
+      await post.save();
+      res.status(200).json({
+        status: 200,
+        message: `Gönderi başarıyla unlike edildi!`,
+      });
+    }
+    res.status(400).json({
+      status: 400,
+      message: `Gönderi zaten henüz beğenilmemiş!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const createComment = async (req, res) => {
   const { post_id, user_id, content } = req.body;
 
@@ -82,7 +133,9 @@ const getTimeline = async (req, res) => {
           as: "category",
         },
       },
-    ]);
+    ]).sort({
+      created_at: -1,
+    });
 
     res.status(200).json({
       status: 200,
@@ -128,4 +181,11 @@ const getComments = async (req, res) => {
   }
 };
 
-module.exports = { createPost, createComment, getTimeline, getComments };
+module.exports = {
+  createPost,
+  likePost,
+  unlikePost,
+  createComment,
+  getTimeline,
+  getComments,
+};

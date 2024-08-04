@@ -46,6 +46,8 @@ app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
 //For Mobile
 app.use("/create_post", require("./routes/mobile/post/create"));
 app.use("/timeline", require("./routes/mobile/post/timeline"));
+app.use("/like_post", require("./routes/mobile/post/like"));
+app.use("/unlike_post", require("./routes/mobile/post/unlike"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
 app.use("/categories", require("./routes/mobile/categories"));
 app.use("/category_detail", require("./routes/mobile/category_detail"));
@@ -72,6 +74,7 @@ app.use(
 );
 app.use("/update_user", require("./routes/mobile/user/update_user"));
 app.use("/certificates", require("./routes/mobile/user/certificates"));
+app.use("/users_categories", require("./routes/mobile/user/categories"));
 app.use("/get_blockeds", require("./routes/mobile/user/get_blockeds"));
 app.use("/block_user", require("./routes/mobile/user/block_user"));
 app.use("/unblock_user", require("./routes/mobile/user/unblock_user"));
