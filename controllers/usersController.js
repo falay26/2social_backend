@@ -351,7 +351,9 @@ const selectActivity = async (req, res) => {
 
     let olds = user.in_categories.map((i) => i.category_id);
     if (olds.length === 0) {
-      let all_sub_categories = SubCategories.find({});
+      let all_sub_categories = SubCategories.find({
+        category_id: mongoose.Types.ObjectId(category_id),
+      });
       let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
       let new_sub_category = all_sub_categories[random - 1];
 
