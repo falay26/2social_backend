@@ -57,6 +57,7 @@ app.use("/career", require("./routes/mobile/badge/get"));
 app.use("/support", require("./routes/mobile/support/create"));
 //User related
 app.use("/change_language", require("./routes/mobile/user/change_language"));
+app.use("/save_token", require("./routes/mobile/user/save_token"));
 app.use("/follow_user", require("./routes/mobile/user/follow_user"));
 app.use("/unfollow_user", require("./routes/mobile/user/unfollow_user"));
 app.use("/add_reminder", require("./routes/mobile/user/add_reminder"));

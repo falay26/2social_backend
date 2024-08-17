@@ -39,6 +39,24 @@ const changeLanguage = async (req, res) => {
   }
 };
 
+const saveToken = async (req, res) => {
+  const { user_id, token } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    user.notification_token = token;
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Kullanıcı bildirim tokeni kaydedildi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const followUser = async (req, res) => {
   const { user_id, followed_user_id } = req.body;
 
@@ -453,6 +471,7 @@ const getUsersCategories = async (req, res) => {
 module.exports = {
   getAllUsers,
   changeLanguage,
+  saveToken,
   followUser,
   unfollowUser,
   addReminder,
