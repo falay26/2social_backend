@@ -117,6 +117,10 @@ app.use("/add_badge", require("./routes/admin/badge/add"));
 app.use("/update_badge", require("./routes/admin/badge/update"));
 app.use("/delete_badge", require("./routes/admin/badge/delete"));
 
+//To be deleted later
+app.use("/save_video", require("./routes/save_video"));
+app.use("/get_video", require("./routes/get_video"));
+
 /*
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
