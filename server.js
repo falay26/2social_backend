@@ -84,6 +84,9 @@ app.use("/select_activity", require("./routes/mobile/user/select_activity"));
 app.use("/get_followings", require("./routes/mobile/user/get_followings"));
 app.use("/report_user", require("./routes/mobile/report/report_user"));
 app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
+app.use("/get_messages", require("./routes/mobile/message/get_messages"));
+app.use("/send_message", require("./routes/mobile/message/send_message"));
+app.use("/read_messages", require("./routes/mobile/message/read_messages"));
 
 //For Admin
 //Users
@@ -116,10 +119,6 @@ app.use("/get_all_badges", require("./routes/admin/badge/get_all"));
 app.use("/add_badge", require("./routes/admin/badge/add"));
 app.use("/update_badge", require("./routes/admin/badge/update"));
 app.use("/delete_badge", require("./routes/admin/badge/delete"));
-
-//To be deleted later
-app.use("/save_video", require("./routes/save_video"));
-app.use("/get_video", require("./routes/get_video"));
 
 /*
 app.use("/refresh", require("./routes/refresh"));
