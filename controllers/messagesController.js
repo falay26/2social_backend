@@ -1,10 +1,21 @@
 const User = require("../model/User");
 const Message = require("../model/Message");
 const mongoose = require("mongoose");
+const Jimp = require("jimp");
 //Notification
 var FCM = require("fcm-node");
 var serverKey = process.env.FIREBASE_SERVER_KEY;
 var fcm = new FCM(serverKey);
+//Formatters
+const messagesFormatter = require("../helpers/messagesFormatter");
+//Storage
+const fs = require("fs");
+const {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} = require("firebase/storage");
 
 const getAllMessages = async (req, res) => {
   const { user_id } = req.body;
@@ -43,7 +54,7 @@ const getAllMessages = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      data: messages,
+      data: messagesFormatter(messages, user_id),
       message: "Mesajlar başarıyla döndürüldü!",
     });
   } catch (err) {
@@ -90,7 +101,6 @@ const sendMessage = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      data: message,
       message: "Mesaj başarıyla gönderildi.",
     });
   } catch (err) {
@@ -117,8 +127,36 @@ const readAllMessages = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      data: message,
       message: "Mesajlar başarıyla okundu!",
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const baseToImg = async (req, res) => {
+  const { base } = req.body;
+
+  try {
+    const buffer = Buffer.from(base, "base64");
+    const image_name = Date.now().toString();
+    Jimp.read(buffer, (err, lenna) => {
+      if (err) throw err;
+      lenna.quality(5).write("./uploads/" + image_name + ".jpg");
+    });
+
+    const storage = getStorage();
+    const imageRef = ref(storage, image_name);
+    const img = fs.readFileSync();
+    uploadBytesResumable(imageRef, img).then(() => {
+      getDownloadURL(imageRef).then((url) => {
+        console.log(url);
+        res.status(200).json({
+          status: 200,
+          image: url,
+          message: "Mesajlar başarıyla okundu!",
+        });
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -129,4 +167,5 @@ module.exports = {
   getAllMessages,
   sendMessage,
   readAllMessages,
+  baseToImg,
 };

@@ -11,6 +11,10 @@ const credentials = require("./middleware/credentials");
 const mongoose = require("mongoose");
 const connectDB = require("./config/dbConn");
 const PORT = process.env.PORT || 3500;
+//Firebase
+const { initializeApp } = require("firebase/app");
+const config = require("./config/firabase");
+initializeApp(config.firebaseConfig);
 
 // Connect to MongoDB
 connectDB();
@@ -87,6 +91,7 @@ app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
 app.use("/get_messages", require("./routes/mobile/message/get_messages"));
 app.use("/send_message", require("./routes/mobile/message/send_message"));
 app.use("/read_messages", require("./routes/mobile/message/read_messages"));
+app.use("/base64_to_img", require("./routes/mobile/message/base64_to_img"));
 
 //For Admin
 //Users
