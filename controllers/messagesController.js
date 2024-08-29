@@ -14,7 +14,7 @@ const {
   getStorage,
   ref,
   getDownloadURL,
-  uploadBytesResumable,
+  uploadBytes,
 } = require("firebase/storage");
 
 const getAllMessages = async (req, res) => {
@@ -140,21 +140,21 @@ const baseToImg = async (req, res) => {
   try {
     const buffer = Buffer.from(base, "base64");
     const image_name = Date.now().toString();
-    Jimp.read(buffer, (err, lenna) => {
-      if (err) throw err;
-      lenna.quality(5).write("./uploads/" + image_name + ".jpg");
-    });
 
-    const storage = getStorage();
-    const imageRef = ref(storage, image_name);
-    const img = fs.readFileSync();
-    uploadBytesResumable(imageRef, img).then(() => {
-      getDownloadURL(imageRef).then((url) => {
-        console.log(url);
-        res.status(200).json({
-          status: 200,
-          image: url,
-          message: "Mesajlar başarıyla okundu!",
+    Jimp.read(buffer, async (err, lenna) => {
+      if (err) throw err;
+      lenna.quality(5).write("./uploads/" + image_name + ".jpg", () => {
+        const img = fs.readFileSync("./uploads/" + image_name + ".jpg");
+        const storage = getStorage();
+        const imageRef = ref(storage, image_name + ".jpg");
+        uploadBytes(imageRef, img).then(() => {
+          getDownloadURL(imageRef).then((url) => {
+            res.status(200).json({
+              status: 200,
+              image: url,
+              message: "Resim başarıyla kaydedildi!",
+            });
+          });
         });
       });
     });
