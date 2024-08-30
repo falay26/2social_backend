@@ -54,8 +54,8 @@ app.use("/timeline", require("./routes/mobile/post/timeline"));
 app.use("/like_post", require("./routes/mobile/post/like"));
 app.use("/unlike_post", require("./routes/mobile/post/unlike"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
-//like_comment
-//unlike_comment
+app.use("/like_comment", require("./routes/mobile/comment/like"));
+app.use("/unlike_comment", require("./routes/mobile/comment/unlike"));
 app.use("/categories", require("./routes/mobile/categories"));
 app.use("/users_categories", require("./routes/mobile/users_categories"));
 app.use("/category_detail", require("./routes/mobile/category_detail"));

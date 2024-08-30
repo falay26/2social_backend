@@ -40,6 +40,7 @@ const likePost = async (req, res) => {
         status: 400,
         message: `Gönderi zaten beğenilmiş!`,
       });
+      return;
     }
     post.likes = post.likes.concat([user_id]);
     await post.save();
@@ -68,6 +69,7 @@ const unlikePost = async (req, res) => {
         status: 200,
         message: `Gönderi başarıyla unlike edildi!`,
       });
+      return;
     }
     res.status(400).json({
       status: 400,
@@ -91,6 +93,60 @@ const createComment = async (req, res) => {
     res.status(200).json({
       status: 200,
       message: `Yorum başarı ile paylaşıldı!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const likeComment = async (req, res) => {
+  const { comment_id, user_id } = req.body;
+
+  try {
+    const comment = await Comment.findOne({
+      _id: comment_id,
+    }).exec();
+
+    if (comment.likes.includes(user_id)) {
+      res.status(400).json({
+        status: 400,
+        message: `Yorum zaten beğenilmiş!`,
+      });
+      return;
+    }
+    comment.likes = comment.likes.concat([user_id]);
+    await comment.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Yorum başarı ile beğenildi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const unlikeComment = async (req, res) => {
+  const { comment_id, user_id } = req.body;
+
+  try {
+    const comment = await Comment.findOne({
+      _id: comment_id,
+    }).exec();
+
+    if (comment.likes.includes(user_id)) {
+      comment.likes = comment.likes.filter((i) => i !== user_id);
+      await comment.save();
+      res.status(200).json({
+        status: 200,
+        message: `Yorum başarıyla unlike edildi!`,
+      });
+      return;
+    }
+
+    res.status(400).json({
+      status: 400,
+      message: `Yorum zaten beğenilmemiş!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -186,6 +242,8 @@ module.exports = {
   likePost,
   unlikePost,
   createComment,
+  likeComment,
+  unlikeComment,
   getTimeline,
   getComments,
 };
