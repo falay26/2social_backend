@@ -211,7 +211,7 @@ const getComments = async (req, res) => {
     const comments = await Comment.aggregate([
       {
         $match: {
-          post_id: post_id,
+          post_id: mongoose.Types.ObjectId(post_id),
           user_id: {
             $nin: user.blockeds.map((i) => mongoose.Types.ObjectId(i)),
           },
