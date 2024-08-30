@@ -380,7 +380,7 @@ const selectActivity = async (req, res) => {
         {
           category_id: category_id,
           participants: [],
-          sub_categories: [new_sub_category],
+          sub_categories: [new_sub_category._id],
         },
       ]);
       user.in_categories = [category_id];
@@ -417,7 +417,9 @@ const selectActivity = async (req, res) => {
         status: 200,
         sub_category: new_sub_category,
         new: false,
-        step_amount: user.in_sub_categories.length + 1,
+        step_amount:
+          user.in_sub_categories.filter((i) => i.category_id === category_id)
+            .length + 1,
         message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
       });
     }
