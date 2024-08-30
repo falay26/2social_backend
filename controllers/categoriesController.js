@@ -116,11 +116,7 @@ const getCategoriesMobile = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
     const types = await Type.find();
-    const categories = await Category.find({
-      _id: {
-        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
-      },
-    });
+    const categories = await Category.find();
     const titles = await Title.aggregate([
       { $match: { _id: { $exists: true } } },
       {
@@ -139,6 +135,27 @@ const getCategoriesMobile = async (req, res) => {
       types: typeFormatter(types, user),
       titles: titleFormatter(titles, user),
       message: `Kategoriler başarı ile döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const getUsersCategories = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const categories = await Category.find({
+      _id: {
+        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
+      },
+    });
+
+    res.status(200).json({
+      status: 200,
+      categories: categoryFormatter(categories, user, 1),
+      message: `Kullanıcının kategorileri başarı ile döndürüldü!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -182,5 +199,6 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getCategoriesMobile,
+  getUsersCategories,
   getCategoryDetail,
 };

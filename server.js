@@ -57,6 +57,7 @@ app.use("/create_comment", require("./routes/mobile/comment/create"));
 //like_comment
 //unlike_comment
 app.use("/categories", require("./routes/mobile/categories"));
+app.use("/users_categories", require("./routes/mobile/users_categories"));
 app.use("/category_detail", require("./routes/mobile/category_detail"));
 app.use("/notifications", require("./routes/mobile/notification/get"));
 app.use("/read_notifications", require("./routes/mobile/notification/read"));
