@@ -66,7 +66,10 @@ app.use("/support", require("./routes/mobile/support/create"));
 
 //User related
 //profile
-//notification_preferance
+app.use(
+  "/notification_preference",
+  require("./routes/mobile/user/notification_preference")
+);
 app.use("/change_language", require("./routes/mobile/user/change_language"));
 app.use("/save_token", require("./routes/mobile/user/save_token"));
 app.use("/follow_user", require("./routes/mobile/user/follow_user"));
@@ -96,14 +99,16 @@ app.use("/get_followings", require("./routes/mobile/user/get_followings"));
 app.use("/report_user", require("./routes/mobile/report/report_user"));
 app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
 app.use("/get_messages", require("./routes/mobile/message/get_messages"));
+app.use("/get_message", require("./routes/mobile/message/get_message"));
 app.use("/send_message", require("./routes/mobile/message/send_message"));
 app.use("/read_messages", require("./routes/mobile/message/read_messages"));
-//delete_message
+app.use("/delete_message", require("./routes/mobile/message/delete_message"));
 app.use("/base64_to_img", require("./routes/mobile/message/base64_to_img"));
 
 //For Admin
 //Users
 app.use("/get_all_users", require("./routes/admin/get_all_users"));
+app.use("/suspend_user", require("./routes/admin/suspend_user"));
 //Titles
 app.use("/get_all_titles", require("./routes/admin/title/get_all"));
 app.use("/add_title", require("./routes/admin/title/add"));

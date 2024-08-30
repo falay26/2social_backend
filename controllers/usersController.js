@@ -39,6 +39,24 @@ const changeLanguage = async (req, res) => {
   }
 };
 
+const notificationPreference = async (req, res) => {
+  const { user_id, preference } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    user.notification_preference = preference;
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Kullanıcı bildirim tercihi güncellendi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const saveToken = async (req, res) => {
   const { user_id, token } = req.body;
 
@@ -474,9 +492,32 @@ const getUsersCategories = async (req, res) => {
   }
 };
 
+const suspendUser = async (req, res) => {
+  const { user_id, month } = req.body;
+
+  try {
+    const user = await User.findOne({
+      _id: user_id,
+    }).exec();
+
+    user.suspended_until = new Date(
+      new Date().getTime() + month * 30 * 24 * 60 * 60 * 1000
+    );
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: "Kullanıcı başarıyla askıya alındı!",
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   changeLanguage,
+  notificationPreference,
   saveToken,
   followUser,
   unfollowUser,
@@ -493,4 +534,5 @@ module.exports = {
   selectActivity,
   getFollowings,
   getUsersCategories,
+  suspendUser,
 };

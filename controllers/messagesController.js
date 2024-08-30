@@ -62,6 +62,29 @@ const getAllMessages = async (req, res) => {
   }
 };
 
+const getMessage = async (req, res) => {
+  const { user_id, message_id } = req.body;
+
+  try {
+    const message = await Message.findOne({ _id: message_id }).exec();
+    const last_deletes = message.cleared_by.filter(
+      (i) => i.user_id === user_id
+    );
+    const last_delete_date = last_deletes[last_deletes.length - 1].date;
+    const messages = message.messages
+      .filter((i) => i.date < last_delete_date)
+      .reverse();
+
+    res.status(200).json({
+      status: 200,
+      data: messages,
+      message: "Mesajlar başarıyla döndürüldü!",
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const sendMessage = async (req, res) => {
   const { message_id, message_sended } = req.body;
 
@@ -163,9 +186,33 @@ const baseToImg = async (req, res) => {
   }
 };
 
+const deleteMessage = async (req, res) => {
+  const { message_id, user_id } = req.body;
+
+  try {
+    const message = await Message.findOne({ _id: message_id }).exec();
+
+    message.cleared_by = message.cleared_by.concat([
+      { user_id: user_id, date: new Date() },
+    ]);
+
+    await message.markModified("cleared_by");
+    await message.save();
+
+    res.status(200).json({
+      status: 200,
+      message: "Mesajlar başarıyla silindi!",
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   getAllMessages,
+  getMessage,
   sendMessage,
   readAllMessages,
+  deleteMessage,
   baseToImg,
 };

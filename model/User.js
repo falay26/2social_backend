@@ -100,6 +100,10 @@ const userSchema = new Schema(
       type: String,
       default: "tr",
     },
+    notification_preference: {
+      type: Boolean,
+      default: true,
+    },
     deleted: {
       type: Boolean,
       default: false,

@@ -183,9 +183,12 @@ const confirmLoginOtp = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
+      let suspended = new Date() < new Date(foundUser?.suspended_until);
+
       res.status(200).json({
         status: 200,
         message: "Giriş yapma işlemi başarılı!",
+        suspended: suspended,
         user: {
           roles,
           accessToken,
