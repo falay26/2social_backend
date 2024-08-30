@@ -417,7 +417,7 @@ const selectActivity = async (req, res) => {
         status: 200,
         sub_category: new_sub_category,
         new: false,
-        step_amount: olds.length + 1,
+        step_amount: user.in_sub_categories.length + 1,
         message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
       });
     }
