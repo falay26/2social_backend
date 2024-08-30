@@ -67,6 +67,7 @@ const followUser = async (req, res) => {
         status: 400,
         message: `Bu kullanıcıyı zaten takip ediyorsun!`,
       });
+      return;
     } else {
       user.following = user.following.concat([followed_user_id]);
     }
@@ -94,6 +95,7 @@ const unfollowUser = async (req, res) => {
         status: 400,
         message: `Bu kullanıcıyı zaten takip etmiyorsun!`,
       });
+      return;
     }
 
     await user.save();
@@ -417,9 +419,9 @@ const selectActivity = async (req, res) => {
         status: 200,
         sub_category: new_sub_category,
         new: false,
-        step_amount:
-          user.in_sub_categories.filter((i) => i.category_id === category_id)
-            .length + 1,
+        step_amount: user.in_sub_categories.filter(
+          (i) => i.category_id === category_id
+        ).length,
         message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
       });
     }
