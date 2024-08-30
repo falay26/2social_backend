@@ -46,6 +46,7 @@ app.use("/resend_register_otp", require("./routes/auth/resend_register_otp"));
 app.use("/login", require("./routes/auth/auth"));
 app.use("/confirm_login_otp", require("./routes/auth/confirm_login_otp"));
 app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
+//recover_account
 
 //For Mobile
 app.use("/create_post", require("./routes/mobile/post/create"));
@@ -53,13 +54,18 @@ app.use("/timeline", require("./routes/mobile/post/timeline"));
 app.use("/like_post", require("./routes/mobile/post/like"));
 app.use("/unlike_post", require("./routes/mobile/post/unlike"));
 app.use("/create_comment", require("./routes/mobile/comment/create"));
+//like_comment
+//unlike_comment
 app.use("/categories", require("./routes/mobile/categories"));
 app.use("/category_detail", require("./routes/mobile/category_detail"));
 app.use("/notifications", require("./routes/mobile/notification/get"));
 app.use("/read_notifications", require("./routes/mobile/notification/read"));
 app.use("/career", require("./routes/mobile/badge/get"));
 app.use("/support", require("./routes/mobile/support/create"));
+
 //User related
+//profile
+//notification_preferance
 app.use("/change_language", require("./routes/mobile/user/change_language"));
 app.use("/save_token", require("./routes/mobile/user/save_token"));
 app.use("/follow_user", require("./routes/mobile/user/follow_user"));
@@ -91,6 +97,7 @@ app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
 app.use("/get_messages", require("./routes/mobile/message/get_messages"));
 app.use("/send_message", require("./routes/mobile/message/send_message"));
 app.use("/read_messages", require("./routes/mobile/message/read_messages"));
+//delete_message
 app.use("/base64_to_img", require("./routes/mobile/message/base64_to_img"));
 
 //For Admin

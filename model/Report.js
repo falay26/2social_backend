@@ -15,7 +15,7 @@ const reportSchema = new Schema(
       type: ObjectId,
     },
     report_type: {
-      type: String,
+      type: Array,
     },
     report: {
       type: String,

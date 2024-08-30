@@ -22,8 +22,8 @@ const handleLogin = async (req, res) => {
       //deleted: false, //TODO: add this to every user..
     }).exec();
     if (!foundUser)
-      return res.status(409).json({
-        status: 409,
+      return res.status(400).json({
+        status: 400,
         message: "Kullanıcı bulunamadı.",
       });
 
@@ -130,8 +130,8 @@ const confirmLoginOtp = async (req, res) => {
       deleted: false,
     }).exec();
     if (!foundUser)
-      return res.status(200).json({
-        status: 409,
+      return res.status(400).json({
+        status: 400,
         message: "Kullanıcı bulunamadı.",
       });
 
@@ -198,8 +198,8 @@ const confirmLoginOtp = async (req, res) => {
         },
       });
     } else {
-      res.status(200).json({
-        status: 400,
+      res.status(401).json({
+        status: 401,
         message: "Otp hatalı!",
       });
     }
