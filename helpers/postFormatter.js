@@ -6,11 +6,11 @@ const postFormatter = (array, user) => {
     let new_item = {
       id: item?._id,
       name: item?.user?.name,
-      profilePhoto: item?.user?.profile_picture,
+      profilePhoto: item?.user[0]?.profile_picture,
       category: item?.category[0]?.name[user?.preferred_language],
       categoryIcon: item?.category[0]?.icon,
       follow: user?.following?.includes(item?.user?._id),
-      official: item?.user?.premium,
+      official: item?.user[0]?.premium,
       createdData: item?.created_at, //TODO: maybe format this further.
       likeCount: item?.likes?.length,
       commentCount: item?.comments?.length,
