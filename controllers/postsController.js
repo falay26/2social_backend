@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Jimp = require("jimp");
 //Models
 const Post = require("../model/Post");
 const Comment = require("../model/Comment");
@@ -6,23 +7,46 @@ const User = require("../model/User");
 //Formatters
 const postFormatter = require("../helpers/postFormatter");
 const commentFormatter = require("../helpers/commentFormatter");
+//Storage
+const fs = require("fs");
+const {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytes,
+} = require("firebase/storage");
 
 const createPost = async (req, res) => {
   const { content, image, users, category_id, public, user_id } = req.body;
 
   try {
-    await Post.create({
-      content: content,
-      image: image,
-      users: users,
-      category_id: category_id,
-      public: public,
-      owner_id: user_id,
-    });
+    const buffer = Buffer.from(image, "base64");
+    const image_name = Date.now().toString();
 
-    res.status(200).json({
-      status: 200,
-      message: `Gönderi başarı ile paylaşıldı!`,
+    Jimp.read(buffer, async (err, lenna) => {
+      if (err) throw err;
+      lenna.quality(5).write("./uploads/" + image_name + ".jpg", () => {
+        const img = fs.readFileSync("./uploads/" + image_name + ".jpg");
+        const storage = getStorage();
+        const imageRef = ref(storage, image_name + ".jpg");
+        uploadBytes(imageRef, img).then(() => {
+          getDownloadURL(imageRef).then(async (url) => {
+            await Post.create({
+              content: content,
+              image: url,
+              users: users,
+              category_id: category_id,
+              public: public,
+              owner_id: user_id,
+            });
+
+            res.status(200).json({
+              status: 200,
+              message: `Gönderi başarı ile paylaşıldı!`,
+            });
+          });
+        });
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
