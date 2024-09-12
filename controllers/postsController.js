@@ -25,7 +25,7 @@ const createPost = async (req, res) => {
 
     Jimp.read(buffer, async (err, lenna) => {
       if (err) throw err;
-      lenna.quality(5).write("./uploads/" + image_name + ".jpg", () => {
+      lenna.quality(10).write("./uploads/" + image_name + ".jpg", () => {
         const img = fs.readFileSync("./uploads/" + image_name + ".jpg");
         const storage = getStorage();
         const imageRef = ref(storage, image_name + ".jpg");
