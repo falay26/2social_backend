@@ -6,7 +6,7 @@ const badgeFormatter = (array, user) => {
     let new_item = {
       id: item?._id,
       icon: item?.image,
-      owned: user.badges.includes(item?._id),
+      owned: user?.badges.includes(item?._id),
     };
     new_array.push(new_item);
   }

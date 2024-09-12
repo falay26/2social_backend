@@ -11,7 +11,7 @@ const categoryFormatter = (array, user, id) => {
         text: item?.name[user?.preferred_language],
         desc: item?.description[user?.preferred_language],
         step: user?.in_sub_categories.filter((i) => i.category_id === item?._id)
-          .length,
+          ?.length,
         total: item?.step_number,
         photoCount: 5, //TODO: ask this.
       };
