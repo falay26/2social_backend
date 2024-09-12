@@ -90,6 +90,7 @@ const handleLogin = async (req, res) => {
           phone: foundUser.phone,
           profile_picture: foundUser.profile_picture,
           _id: foundUser._id,
+          notification_preference: foundUser.notification_preference,
         },
       });
     } else {
@@ -198,6 +199,7 @@ const confirmLoginOtp = async (req, res) => {
           profile_picture: foundUser.profile_picture,
           _id: foundUser._id,
           login_otp: foundUser.login_otp,
+          notification_preference: foundUser.notification_preference,
         },
       });
     } else {
