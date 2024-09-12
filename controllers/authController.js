@@ -91,6 +91,7 @@ const handleLogin = async (req, res) => {
           profile_picture: foundUser.profile_picture,
           _id: foundUser._id,
           notification_preference: foundUser.notification_preference,
+          preferred_language: foundUser.preferred_language,
         },
       });
     } else {
@@ -200,6 +201,7 @@ const confirmLoginOtp = async (req, res) => {
           _id: foundUser._id,
           login_otp: foundUser.login_otp,
           notification_preference: foundUser.notification_preference,
+          preferred_language: foundUser.preferred_language,
         },
       });
     } else {

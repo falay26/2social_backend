@@ -26,14 +26,23 @@ const changeLanguage = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: user_id });
-    user.preferred_language = language_code;
+    if (language_code === null) {
+      res.status(201).json({
+        status: 201,
+        language_code: user.language_code,
+        message: `Kullanıcı dil bilgisi döndürüldü!`,
+      });
+      return;
+    } else {
+      user.preferred_language = language_code;
 
-    await user.save();
+      await user.save();
 
-    res.status(200).json({
-      status: 200, //TODO: maybe return user.
-      message: `Kullanıcı dil tercihi güncellendi!`,
-    });
+      res.status(200).json({
+        status: 200, //TODO: maybe return user.
+        message: `Kullanıcı dil tercihi güncellendi!`,
+      });
+    }
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
@@ -44,14 +53,23 @@ const notificationPreference = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: user_id });
-    user.notification_preference = preference;
+    if (preference === null) {
+      res.status(201).json({
+        status: 201,
+        notification_preference: user.notification_preference,
+        message: `Kullanıcı bildirim tercihi döndürüldü!`,
+      });
+      return;
+    } else {
+      user.notification_preference = preference;
 
-    await user.save();
+      await user.save();
 
-    res.status(200).json({
-      status: 200,
-      message: `Kullanıcı bildirim tercihi güncellendi!`,
-    });
+      res.status(200).json({
+        status: 200,
+        message: `Kullanıcı bildirim tercihi güncellendi!`,
+      });
+    }
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
