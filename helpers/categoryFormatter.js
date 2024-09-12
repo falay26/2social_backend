@@ -13,7 +13,7 @@ const categoryFormatter = (array, user, id) => {
         step: user?.in_sub_categories.filter((i) => i.category_id === item?._id)
           ?.length,
         total: item?.step_number,
-        photoCount: 5, //TODO: ask this.
+        photoCount: item?.posts?.length,
       };
       new_array.push(new_item);
     }

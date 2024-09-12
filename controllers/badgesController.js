@@ -116,17 +116,18 @@ const getCareer = async (req, res) => {
         let new_obj = category;
         const posts = await Post.find({
           owner_id: user_id,
-          category_id: category.id,
+          category_id: category._id,
         });
         new_obj.posts = posts;
-        return posts;
+        return new_obj;
       })
     );
+    console.log("12312312", new_categories);
 
     res.status(200).json({
       status: 200,
       badges: badgeFormatter(badges, user),
-      categories: categoryFormatter(new_categories, user, 0),
+      categories: categoryFormatter(categories, user, 0),
       message: `Kariyer sayfası başarıyla dönüldü!`,
     });
   } catch (err) {

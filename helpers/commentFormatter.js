@@ -9,7 +9,7 @@ const commentFormatter = (array) => {
       profilePhoto: item?.user[0]?.profile_picture,
       premium: item?.user[0]?.premium,
       comment: item?.content,
-      liked: item?.likes?.includes(item?.user[0]?._id),
+      liked: item?.likes?.includes(item?.user[0]?._id.toString()),
     };
     new_array.push(new_item);
   }

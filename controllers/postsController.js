@@ -183,7 +183,8 @@ const getTimeline = async (req, res) => {
   const { user_id } = req.body;
 
   try {
-    const user = await User.findOne({ _id: user_id }).exec();
+    const user = await User.findOne({ _id: user_id });
+    console.log(user_id);
     const posts = await Post.aggregate([
       {
         $match: {

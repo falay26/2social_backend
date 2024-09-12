@@ -16,7 +16,7 @@ const postFormatter = (array, user) => {
       commentCount: item?.comments?.length,
       postDesc: item?.content,
       postPhoto: item?.image,
-      liked: item?.likes?.includes(user?._id),
+      liked: item?.likes?.includes(user?._id.toString()),
       user_id: item?.owner_id,
     };
     new_array.push(new_item);
