@@ -119,15 +119,20 @@ const getCareer = async (req, res) => {
           category_id: category._id,
         });
         new_obj.posts = posts;
+        new_obj.reminder = 0;
+        user.reminders.map((i) => {
+          if (i.category_id === category._id.toString()) {
+            new_obj.reminder = i.day_number;
+          }
+        });
         return new_obj;
       })
     );
-    console.log("12312312", new_categories);
 
     res.status(200).json({
       status: 200,
       badges: badgeFormatter(badges, user),
-      categories: categoryFormatter(categories, user, 0),
+      categories: categoryFormatter(new_categories, user, 0),
       message: `Kariyer sayfası başarıyla dönüldü!`,
     });
   } catch (err) {

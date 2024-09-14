@@ -14,6 +14,7 @@ const categoryFormatter = (array, user, id) => {
           ?.length,
         total: item?.step_number,
         photoCount: item?.posts?.length,
+        reminder: item?.reminder,
       };
       new_array.push(new_item);
     }

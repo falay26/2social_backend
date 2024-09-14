@@ -178,7 +178,7 @@ const getCategoryDetail = async (req, res) => {
       },
     });
 
-    //TODO:
+    //TODO: FİX
     res.status(200).json({
       status: 200,
       user_finished: user.in_sub_categories.filter(

@@ -10,6 +10,7 @@ const commentFormatter = (array) => {
       premium: item?.user[0]?.premium,
       comment: item?.content,
       liked: item?.likes?.includes(item?.user[0]?._id.toString()),
+      like_count: item?.likes?.length,
     };
     new_array.push(new_item);
   }

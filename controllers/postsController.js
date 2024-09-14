@@ -180,49 +180,86 @@ const unlikeComment = async (req, res) => {
 };
 
 const getTimeline = async (req, res) => {
-  const { user_id } = req.body;
+  const { user_id, category_id } = req.body; //TODO: category_id
 
   try {
     const user = await User.findOne({ _id: user_id });
-    console.log(user_id);
-    const posts = await Post.aggregate([
-      {
-        $match: {
-          _id: { $exists: true },
-          owner_id: { $nin: user.blockeds.concat(user_id) },
-        },
-      },
-      {
-        $lookup: {
-          from: "comments",
-          localField: "_id",
-          foreignField: "post_id",
-          as: "comments",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "owner_id",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category_id",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-    ]).sort({
-      created_at: -1,
-    });
+    const posts =
+      category_id === null
+        ? await Post.aggregate([
+            {
+              $match: {
+                _id: { $exists: true },
+                owner_id: { $nin: user.blockeds.concat(user_id) },
+              },
+            },
+            {
+              $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "post_id",
+                as: "comments",
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner_id",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $lookup: {
+                from: "categories",
+                localField: "category_id",
+                foreignField: "_id",
+                as: "category",
+              },
+            },
+          ]).sort({
+            created_at: -1,
+          })
+        : await Post.aggregate([
+            {
+              $match: {
+                _id: { $exists: true },
+                owner_id: { $nin: user.blockeds.concat(user_id) },
+                category_id: mongoose.Types.ObjectId(category_id),
+              },
+            },
+            {
+              $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "post_id",
+                as: "comments",
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner_id",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $lookup: {
+                from: "categories",
+                localField: "category_id",
+                foreignField: "_id",
+                as: "category",
+              },
+            },
+          ]).sort({
+            created_at: -1,
+          });
 
     res.status(200).json({
       status: 200,
       posts: postFormatter(posts, user),
+      users_badges: user.badges,
       message: `Timeline başarı ile döndürüldü!`,
     });
   } catch (err) {
@@ -264,6 +301,61 @@ const getComments = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          _id: { $exists: true },
+          owner_id: mongoose.Types.ObjectId(user_id),
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+    ]).sort({
+      created_at: -1,
+    });
+
+    let final_posts = user.in_categories.map((i) => {
+      let name = "";
+      let number = 0;
+      let photos = [];
+      posts.map((j) => {
+        if (j.category[0]._id.toString() === i) {
+          name = j.category[0].name.tr;
+          number += 1;
+          photos.push(j.category[0].image);
+        }
+      });
+      return { name: name, number: number, photos: photos };
+    });
+
+    let info = {
+      still_in: user.in_categories.length,
+      followers: user.followers.length,
+      completed: user.badges.length,
+    };
+
+    res.status(200).json({
+      status: 200,
+      info: info,
+      posts: final_posts,
+      message: `Profil başarı ile döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 module.exports = {
   createPost,
   likePost,
@@ -273,4 +365,5 @@ module.exports = {
   unlikeComment,
   getTimeline,
   getComments,
+  getProfile,
 };

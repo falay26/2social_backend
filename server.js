@@ -61,6 +61,7 @@ app.use("/notifications", require("./routes/mobile/notification/get"));
 app.use("/read_notifications", require("./routes/mobile/notification/read"));
 app.use("/career", require("./routes/mobile/badge/get"));
 app.use("/support", require("./routes/mobile/support/create"));
+app.use("/profile", require("./routes/mobile/post/profile"));
 
 //User related
 //profile
