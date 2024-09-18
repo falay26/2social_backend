@@ -42,6 +42,7 @@ app.use("/register", require("./routes/register"));
 app.use("/register_otp", require("./routes/auth/register_otp"));
 app.use("/resend_register_otp", require("./routes/auth/resend_register_otp"));
 app.use("/login", require("./routes/auth/auth"));
+app.use("/social_login", require("./routes/auth/social_login"));
 app.use("/confirm_login_otp", require("./routes/auth/confirm_login_otp"));
 app.use("/resend_login_otp", require("./routes/auth/resend_login_otp"));
 //recover_account

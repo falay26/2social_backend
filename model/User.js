@@ -24,6 +24,9 @@ const userSchema = new Schema(
     surname: {
       type: String,
     },
+    apple_id: {
+      type: String,
+    },
     city_id: {
       type: String,
       default: "",

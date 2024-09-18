@@ -119,6 +119,131 @@ const handleLogin = async (req, res) => {
   }
 };
 
+const handleSocialLogin = async (req, res) => {
+  const { login_type, pineapple, email, name, apple_id } = req.body;
+
+  try {
+    if (pineapple === "123456") {
+      if (login_type === "Apple") {
+        const foundUser = await User.findOne({
+          apple_id: apple_id,
+        }).exec();
+        if (!foundUser) {
+          const user = await User.create({
+            phone_code: "+90",
+            email: email,
+            name: name,
+            apple_id: apple_id,
+            verified: true,
+            deleted: false,
+          });
+
+          const roles = Object.values(user.roles).filter(Boolean);
+          let suspended = new Date() < new Date(user?.suspended_until);
+
+          res.status(200).json({
+            status: 200,
+            message: "Apple Giriş yapma işlemi başarılı!",
+            suspended: suspended,
+            user: {
+              roles,
+              name: user.name,
+              phone_code: user.phone_code,
+              phone: user.phone,
+              profile_picture: user.profile_picture,
+              _id: user._id,
+              login_otp: user.login_otp,
+              notification_preference: user.notification_preference,
+              preferred_language: user.preferred_language,
+            },
+          });
+        } else {
+          const roles = Object.values(foundUser.roles).filter(Boolean);
+          let suspended = new Date() < new Date(foundUser?.suspended_until);
+
+          res.status(200).json({
+            status: 200,
+            message: "Apple Giriş yapma işlemi başarılı!",
+            suspended: suspended,
+            user: {
+              roles,
+              name: foundUser.name,
+              phone_code: foundUser.phone_code,
+              phone: foundUser.phone,
+              profile_picture: foundUser.profile_picture,
+              _id: foundUser._id,
+              login_otp: foundUser.login_otp,
+              notification_preference: foundUser.notification_preference,
+              preferred_language: foundUser.preferred_language,
+            },
+          });
+        }
+        if (login_type === "Google") {
+          const foundUser = await User.findOne({
+            email: email,
+          }).exec();
+          if (!foundUser) {
+            const user = await User.create({
+              phone_code: "+90",
+              email: email,
+              name: name,
+              verified: true,
+              deleted: false,
+            });
+
+            const roles = Object.values(user.roles).filter(Boolean);
+            let suspended = new Date() < new Date(user?.suspended_until);
+
+            res.status(200).json({
+              status: 200,
+              message: "Google Giriş yapma işlemi başarılı!",
+              suspended: suspended,
+              user: {
+                roles,
+                name: user.name,
+                phone_code: user.phone_code,
+                phone: user.phone,
+                profile_picture: user.profile_picture,
+                _id: user._id,
+                login_otp: user.login_otp,
+                notification_preference: user.notification_preference,
+                preferred_language: user.preferred_language,
+              },
+            });
+          } else {
+            const roles = Object.values(foundUser.roles).filter(Boolean);
+            let suspended = new Date() < new Date(foundUser?.suspended_until);
+
+            res.status(200).json({
+              status: 200,
+              message: "Google Giriş yapma işlemi başarılı!",
+              suspended: suspended,
+              user: {
+                roles,
+                name: foundUser.name,
+                phone_code: foundUser.phone_code,
+                phone: foundUser.phone,
+                profile_picture: foundUser.profile_picture,
+                _id: foundUser._id,
+                login_otp: foundUser.login_otp,
+                notification_preference: foundUser.notification_preference,
+                preferred_language: foundUser.preferred_language,
+              },
+            });
+          }
+        }
+      }
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "Yanlış güvenlik kodu!",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const confirmLoginOtp = async (req, res) => {
   const { phone_code, phone, otp } = req.body;
 
@@ -248,4 +373,9 @@ const resendLoginOtp = async (req, res) => {
   }
 };
 
-module.exports = { handleLogin, confirmLoginOtp, resendLoginOtp };
+module.exports = {
+  handleLogin,
+  handleSocialLogin,
+  confirmLoginOtp,
+  resendLoginOtp,
+};
