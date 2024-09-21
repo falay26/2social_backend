@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Jimp = require("jimp");
 //Models
 const User = require("../model/User");
 const Category = require("../model/Category");
@@ -6,6 +7,14 @@ const SubCategories = require("../model/SubCategory");
 //Formatters
 const categoryFormatter = require("../helpers/categoryFormatter");
 const userFormatter = require("../helpers/userFormatter");
+//Storage
+const fs = require("fs");
+const {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytes,
+} = require("firebase/storage");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -43,6 +52,82 @@ const changeLanguage = async (req, res) => {
         message: `Kullanıcı dil tercihi güncellendi!`,
       });
     }
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const getSettings = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+
+    res.status(200).json({
+      status: 200,
+      language: user.preferred_language,
+      notification: user.notification_preference,
+      message: `Kullanıcı ayarlar bilgileri döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const changeProfilePicture = async (req, res) => {
+  const { user_id, image } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const buffer = Buffer.from(image, "base64");
+    const image_name = Date.now().toString();
+
+    Jimp.read(buffer, async (err, lenna) => {
+      if (err) throw err;
+      lenna.quality(10).write("./uploads/" + image_name + ".jpg", () => {
+        const img = fs.readFileSync("./uploads/" + image_name + ".jpg");
+        const storage = getStorage();
+        const imageRef = ref(storage, image_name + ".jpg");
+        uploadBytes(imageRef, img).then(() => {
+          getDownloadURL(imageRef).then(async (url) => {
+            user.profile_picture = url;
+
+            await user.save();
+
+            res.status(200).json({
+              status: 200,
+              message: `Profil resmi başarıyla güncellendi!`,
+            });
+          });
+        });
+      });
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const addToProfile = async (req, res) => {
+  const { user_id, post_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    if (user.added_posts.includes(post_id)) {
+      res.status(400).json({
+        status: 400,
+        message: `Bu post zaten profile eklenmiş!`,
+      });
+      return;
+    } else {
+      user.added_posts = user.added_posts.concat([post_id]);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Post başarıyla profile eklendi!`,
+    });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
@@ -535,6 +620,7 @@ const suspendUser = async (req, res) => {
 module.exports = {
   getAllUsers,
   changeLanguage,
+  addToProfile,
   notificationPreference,
   saveToken,
   followUser,
@@ -553,4 +639,6 @@ module.exports = {
   getFollowings,
   getUsersCategories,
   suspendUser,
+  changeProfilePicture,
+  getSettings,
 };

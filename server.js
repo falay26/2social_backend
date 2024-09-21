@@ -105,6 +105,12 @@ app.use("/send_message", require("./routes/mobile/message/send_message"));
 app.use("/read_messages", require("./routes/mobile/message/read_messages"));
 app.use("/delete_message", require("./routes/mobile/message/delete_message"));
 app.use("/base64_to_img", require("./routes/mobile/message/base64_to_img"));
+app.use("/add_to_profile", require("./routes/mobile/user/add_to_profile"));
+app.use(
+  "/change_profile_picture",
+  require("./routes/mobile/user/change_profile_picture")
+);
+app.use("/settings", require("./routes/mobile/user/settings"));
 
 //For Admin
 //Users

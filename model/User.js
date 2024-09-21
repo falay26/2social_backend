@@ -115,6 +115,10 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    added_posts: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
