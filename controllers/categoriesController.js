@@ -133,7 +133,7 @@ const getCategoriesMobile = async (req, res) => {
       status: 200,
       categories: categoryFormatter(categories, user, 1, types),
       types: typeFormatter(types, user),
-      titles: titleFormatter(titles, user),
+      titles: titleFormatter(titles, user, types),
       message: `Kategoriler başarı ile döndürüldü!`,
     });
   } catch (err) {
