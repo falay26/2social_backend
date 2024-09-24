@@ -67,6 +67,7 @@ const getSettings = async (req, res) => {
       status: 200,
       language: user.preferred_language,
       notification: user.notification_preference,
+      image: user.profile_picture,
       message: `Kullanıcı ayarlar bilgileri döndürüldü!`,
     });
   } catch (err) {
@@ -96,6 +97,7 @@ const changeProfilePicture = async (req, res) => {
 
             res.status(200).json({
               status: 200,
+              image: url,
               message: `Profil resmi başarıyla güncellendi!`,
             });
           });

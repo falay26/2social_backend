@@ -131,7 +131,7 @@ const getCategoriesMobile = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      categories: categoryFormatter(categories, user, 1),
+      categories: categoryFormatter(categories, user, 1, types),
       types: typeFormatter(types, user),
       titles: titleFormatter(titles, user),
       message: `Kategoriler başarı ile döndürüldü!`,
