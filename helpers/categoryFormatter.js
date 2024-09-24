@@ -30,7 +30,7 @@ const categoryFormatter = (array, user, id, types) => {
         id: item?._id,
         icon: item?.image,
         name: item?.name[user?.preferred_language],
-        type: types.filter((i) => i._id === item.type_id)[0].name[
+        type: types.filter((i) => i._id === item.type_id)[0]?.name[
           user?.preferred_language
         ],
       };

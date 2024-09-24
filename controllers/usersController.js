@@ -244,7 +244,7 @@ const addReminder = async (req, res) => {
       user.reminders = user.reminders.push({
         category_id: category_id,
         day_number: day_number,
-        last_reminded: new Date.now(),
+        last_reminded: Date.now(),
       });
     } else {
       user.reminders = user.reminders.map((i) => {
