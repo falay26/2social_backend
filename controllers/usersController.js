@@ -30,6 +30,22 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+
+    res.status(200).json({
+      status: 200,
+      user: user,
+      message: `Kullanıcı bilgileri döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const changeLanguage = async (req, res) => {
   const { user_id, language_code } = req.body;
 
@@ -129,6 +145,62 @@ const addToProfile = async (req, res) => {
     res.status(200).json({
       status: 200,
       message: `Post başarıyla profile eklendi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const addFavouriteCategory = async (req, res) => {
+  const { user_id, category_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    if (user.favourite_categories.includes(category_id)) {
+      res.status(400).json({
+        status: 400,
+        message: `Bu kategori zaten favorilere eklenmiş!`,
+      });
+      return;
+    } else {
+      user.favourite_categories = user.favourite_categories.concat([
+        category_id,
+      ]);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Kategori başarıyla favorilere eklendi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const removeFavouriteCategory = async (req, res) => {
+  const { user_id, category_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    if (user.favourite_categories.includes(category_id)) {
+      user.favourite_categories = user.favourite_categories.filter(
+        (i) => i !== category_id
+      );
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: `Bu kategori zaten favorilerde değil!`,
+      });
+      return;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      status: 200, //TODO: maybe return user.
+      message: `Kategori başarıyla favorilerden çıkarıldı!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -250,7 +322,7 @@ const addReminder = async (req, res) => {
       user.reminders = user.reminders.map((i) => {
         if (i.category_id === category_id) {
           let new_obj = i;
-          i.day_number = day_number;
+          new_obj.day_number = day_number;
           return new_obj;
         } else {
           return i;
@@ -621,6 +693,7 @@ const suspendUser = async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getUser,
   changeLanguage,
   addToProfile,
   notificationPreference,
@@ -643,4 +716,6 @@ module.exports = {
   suspendUser,
   changeProfilePicture,
   getSettings,
+  addFavouriteCategory,
+  removeFavouriteCategory,
 };

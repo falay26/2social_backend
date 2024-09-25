@@ -17,6 +17,7 @@ const postFormatter = (array, user) => {
       postDesc: item?.content,
       postPhoto: item?.image,
       liked: item?.likes?.includes(user?._id.toString()),
+      added_to_profile: user?.added_posts?.includes(item?._id),
       user_id: item?.owner_id,
     };
     new_array.push(new_item);

@@ -111,6 +111,15 @@ app.use(
   require("./routes/mobile/user/change_profile_picture")
 );
 app.use("/settings", require("./routes/mobile/user/settings"));
+app.use(
+  "/add_favourite_category",
+  require("./routes/mobile/user/add_favourite_category")
+);
+app.use(
+  "/remove_favourite_category",
+  require("./routes/mobile/user/remove_favourite_category")
+);
+app.use("/get_user", require("./routes/mobile/user/get_user"));
 
 //For Admin
 //Users
