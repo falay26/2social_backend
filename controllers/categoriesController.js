@@ -128,12 +128,15 @@ const getCategoriesMobile = async (req, res) => {
         },
       },
     ]);
+    const users = await User.find({
+      _id: { $in: categories.map((i) => i.owners.slice(0, 4)) },
+    });
 
     res.status(200).json({
       status: 200,
       categories: categoryFormatter(categories, user, 1, types),
       types: typeFormatter(types, user),
-      titles: titleFormatter(titles, user, types),
+      titles: titleFormatter(titles, user, types, users),
       message: `Kategoriler başarı ile döndürüldü!`,
     });
   } catch (err) {
@@ -183,7 +186,11 @@ const getCategoryDetail = async (req, res) => {
       user_finished: user.in_sub_categories.filter(
         (i) => i.category_id === category_id
       )[0]?.sub_categories,
-      sub_categories: sub_categories,
+      sub_categories: sub_categories.filter((i) =>
+        user.in_sub_categories
+          .filter((j) => j.category_id === category_id)[0]
+          .sub_categories.includes(i._id.toString())
+      ),
       participants: participants,
       message: `Kategoriler başarı ile döndürüldü!`,
     });

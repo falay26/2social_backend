@@ -1,4 +1,4 @@
-const titleFormatter = (array, user, types) => {
+const titleFormatter = (array, user, types, users) => {
   let new_array = [];
 
   for (let i = 0; i < array.length; i++) {
@@ -13,7 +13,7 @@ const titleFormatter = (array, user, types) => {
           desc: j?.description[user?.preferred_language],
           limit: j?.step_number,
           backPhoto: j?.image,
-          photos: [], //TODO: get some users..
+          photos: users.map((i) => i.profile_picture),
           totalCount: j?.owners?.length,
           favourite: user?.favourite_categories?.includes(j?._id),
           type: types.filter((k) => k.id === j.type_id.toString())[0]?.name[
