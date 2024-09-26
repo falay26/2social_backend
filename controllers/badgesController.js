@@ -121,7 +121,7 @@ const getCareer = async (req, res) => {
         new_obj.posts = posts;
         new_obj.reminder = 1;
         user.reminders.map((i) => {
-          if (i.category_id === category?._id?.toString()) {
+          if (i.category_id === category?.id?.toString()) {
             new_obj.reminder = i.day_number;
           }
         });
