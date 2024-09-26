@@ -333,7 +333,7 @@ const getProfile = async (req, res) => {
         if (j.category[0]._id.toString() === i) {
           name = j.category[0].name.tr;
           number += 1;
-          photos.push(j.category[0].image);
+          photos.push(j.image);
         }
       });
       return { name: name, number: number, photos: photos };
