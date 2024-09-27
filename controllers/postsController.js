@@ -275,7 +275,7 @@ const getPost = async (req, res) => {
     const posts = await Post.aggregate([
       {
         $match: {
-          _id: mongoose.Types.ObjectId((post_id),
+          _id: mongoose.Types.ObjectId(post_id),
         },
       },
       {
