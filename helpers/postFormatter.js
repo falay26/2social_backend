@@ -27,7 +27,7 @@ const postFormatter = (array, user, id) => {
     return new_array;
   }
   if (id === 1) {
-    const item = array[i];
+    const item = array[0];
     let new_item = {
       id: item?._id,
       name: item?.user[0]?.name,
