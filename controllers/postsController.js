@@ -180,7 +180,7 @@ const unlikeComment = async (req, res) => {
 };
 
 const getTimeline = async (req, res) => {
-  const { user_id, category_id } = req.body; //TODO: category_id
+  const { user_id, category_id } = req.body;
 
   try {
     const user = await User.findOne({ _id: user_id });
@@ -258,9 +258,56 @@ const getTimeline = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      posts: postFormatter(posts, user),
+      posts: postFormatter(posts, user, 0),
       users_badges: user.badges,
       message: `Timeline başarı ile döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const getPost = async (req, res) => {
+  const { user_id, post_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          _id: post_id,
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "_id",
+          foreignField: "post_id",
+          as: "comments",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 200,
+      posts: postFormatter(posts, user, 1),
+      message: `Post başarı ile döndürüldü!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -366,4 +413,5 @@ module.exports = {
   getTimeline,
   getComments,
   getProfile,
+  getPost,
 };

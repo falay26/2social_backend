@@ -38,7 +38,7 @@ const getUser = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      user: user,
+      user: userFormatter(user),
       message: `Kullanıcı bilgileri döndürüldü!`,
     });
   } catch (err) {
@@ -330,6 +330,8 @@ const addReminder = async (req, res) => {
       });
     }
 
+    await user.markModified("reminders");
+
     await user.save();
 
     res.status(200).json({
@@ -582,8 +584,8 @@ const selectActivity = async (req, res) => {
       ]);
       user.in_categories = [category_id];
 
-      user.markModified("in_cetagories");
-      user.markModified("in_sub_cetagories");
+      user.markModified("in_categories");
+      user.markModified("in_sub_categories");
       await user.save();
 
       res.status(201).json({
@@ -620,6 +622,31 @@ const selectActivity = async (req, res) => {
         message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
       });
     }
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const acceptActivity = async (req, res) => {
+  const { user_id, category_id, sub_category_id } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+
+    user.in_sub_categories = user.in_sub_categories.concat([sub_category_id]);
+
+    if (!user.in_categories.includes(category_id)) {
+      user.in_categories = user.in_categories.concat([category_id]);
+    }
+
+    user.markModified("in_cetagories");
+    user.markModified("in_sub_cetagories");
+    await user.save();
+
+    res.status(200).json({
+      status: 200,
+      message: `Kullanıcı alt başlığa başarıyla eklendi!`,
+    });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
@@ -711,6 +738,7 @@ module.exports = {
   unblockUser,
   deleteProfile,
   selectActivity,
+  acceptActivity,
   getFollowings,
   getUsersCategories,
   suspendUser,
