@@ -38,7 +38,7 @@ const getUser = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      user: userFormatter(user),
+      user: userFormatter(user, 1),
       message: `Kullanıcı bilgileri döndürüldü!`,
     });
   } catch (err) {
@@ -485,7 +485,7 @@ const getBlockeds = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      users: userFormatter(users), //TODO: dummy.
+      users: userFormatter(users, 0), //TODO: dummy.
       message: `Engellenenler başarıyla döndürüldü!`,
     });
   } catch (err) {
@@ -669,7 +669,7 @@ const getFollowings = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      users: userFormatter(users), //TODO: dummy.
+      users: userFormatter(users, 0), //TODO: dummy.
       message: `Takip edilenler başarıyla döndürüldü!`,
     });
   } catch (err) {
