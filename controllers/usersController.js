@@ -313,11 +313,13 @@ const addReminder = async (req, res) => {
     if (
       user.reminders.filter((i) => i.category_id === category_id).length === 0
     ) {
-      user.reminders = user.reminders.push({
-        category_id: category_id,
-        day_number: day_number,
-        last_reminded: Date.now(),
-      });
+      user.reminders = user.reminders.concat([
+        {
+          category_id: category_id,
+          day_number: day_number,
+          last_reminded: Date.now(),
+        },
+      ]);
     } else {
       user.reminders = user.reminders.map((i) => {
         if (i.category_id === category_id) {

@@ -114,10 +114,14 @@ const getCareer = async (req, res) => {
     const new_categories = await Promise.all(
       categories.map(async (category) => {
         let new_obj = category;
-        new_obj.reminder = 1;
-        new_obj.reminder = user.reminders.filter(
-          (i) => i.category_id === category?._id?.toString()
-        )[0]?.day_number;
+        new_obj.reminder =
+          user.reminders.filter(
+            (i) => i.category_id === category?._id?.toString()
+          ).length !== 0
+            ? user.reminders.filter(
+                (i) => i.category_id === category?._id?.toString()
+              )[0]?.day_number
+            : 1;
         const posts = await Post.find({
           owner_id: user_id,
           category_id: category._id,
