@@ -43,7 +43,15 @@ const getAllCategories = async (req, res) => {
 };
 
 const addCategory = async (req, res) => {
-  const { title_id, type_id, name, description, image, step_number } = req.body;
+  const {
+    title_id,
+    type_id,
+    name,
+    description,
+    image,
+    step_number,
+    daily_limit,
+  } = req.body;
 
   try {
     await Category.create({
@@ -53,6 +61,7 @@ const addCategory = async (req, res) => {
       description: description,
       image: image,
       step_number: step_number,
+      daily_limit: daily_limit,
     });
 
     res.status(200).json({
@@ -73,6 +82,7 @@ const updateCategory = async (req, res) => {
     description,
     image,
     step_number,
+    daily_limit,
   } = req.body;
 
   try {
@@ -83,6 +93,7 @@ const updateCategory = async (req, res) => {
     category.description = description;
     category.image = image;
     category.step_number = step_number;
+    category.daily_limit = daily_limit;
 
     await category.save();
 
