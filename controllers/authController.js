@@ -253,7 +253,6 @@ const confirmLoginOtp = async (req, res) => {
     const foundUser = await User.findOne({
       phone_code: phone_code,
       phone: phone,
-      verified: true,
       //deleted: false,
     }).exec();
     if (!foundUser)
