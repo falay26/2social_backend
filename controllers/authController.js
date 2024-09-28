@@ -254,7 +254,7 @@ const confirmLoginOtp = async (req, res) => {
       phone_code: phone_code,
       phone: phone,
       verified: true,
-      deleted: false,
+      //deleted: false,
     }).exec();
     if (!foundUser)
       return res.status(400).json({

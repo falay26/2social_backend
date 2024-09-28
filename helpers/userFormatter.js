@@ -9,6 +9,7 @@ const userFormatter = (array, id) => {
         name: item?.name,
         photo: item?.profile_picture,
         mail: item?.email,
+        phone: item?.phone,
       };
       new_array.push(new_item);
     }

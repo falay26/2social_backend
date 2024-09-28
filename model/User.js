@@ -119,6 +119,9 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    notification_token: {
+      type: String,
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

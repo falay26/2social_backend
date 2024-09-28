@@ -19,6 +19,13 @@ const {
 const createPost = async (req, res) => {
   const { content, image, users, category_id, public, user_id } = req.body;
 
+  if (!category_id) {
+    res.status(400).json({
+      status: 400,
+      message: `category_id gönderilmesi zorunludur.`,
+    });
+  }
+
   try {
     const buffer = Buffer.from(image, "base64");
     const image_name = Date.now().toString();
@@ -336,7 +343,9 @@ const getComments = async (req, res) => {
           as: "user",
         },
       },
-    ]);
+    ]).sort({
+      created_at: -1,
+    });
 
     res.status(200).json({
       status: 200,
@@ -377,7 +386,7 @@ const getProfile = async (req, res) => {
       let number = 0;
       let photos = [];
       posts.map((j) => {
-        if (j.category[0]._id.toString() === i) {
+        if (j?.category[0]?._id.toString() === i) {
           name = j.category[0].name.tr;
           number += 1;
           photos.push(j.image);
