@@ -23,6 +23,7 @@ const userFormatter = (array, id) => {
       name: item?.name,
       photo: item?.profile_picture,
       mail: item?.email,
+      phone: item?.phone,
     };
 
     return new_item;
