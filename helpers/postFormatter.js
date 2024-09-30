@@ -8,6 +8,7 @@ const postFormatter = (array, user, id) => {
         id: item?._id,
         name: item?.user[0]?.name,
         profilePhoto: item?.user[0]?.profile_picture,
+        poster_id: item?.user[0]?._id,
         category: item?.category[0]?.name[user?.preferred_language],
         category_id: item?.category[0]?._id,
         categoryIcon: item?.category[0]?.icon,
