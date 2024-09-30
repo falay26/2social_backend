@@ -145,12 +145,24 @@ const getCategoriesMobile = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      started_categories: categoryFormatter(
+      started_categories: titleFormatter(
+        titles.filter((i) =>
+          i.categories_info.map((j) =>
+            user.in_categories.includes(j._id.toString())
+          )
+        ),
+        user,
+        types,
+        users
+      ),
+      /*
+      categoryFormatter(
         categories.filter((i) => user.in_categories.includes(i._id.toString())),
         user,
         1,
         types
       ),
+      */
       categories: categoryFormatter(categories, user, 1, types),
       types: typeFormatter(types, user),
       titles: titleFormatter(titles, user, types, users),
