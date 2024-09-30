@@ -25,6 +25,12 @@ const createPost = async (req, res) => {
       message: `category_id gönderilmesi zorunludur.`,
     });
   }
+  if (!user_id) {
+    res.status(400).json({
+      status: 400,
+      message: `user_id gönderilmesi zorunludur.`,
+    });
+  }
 
   try {
     const buffer = Buffer.from(image, "base64");
