@@ -103,6 +103,10 @@ app.use("/report_user", require("./routes/mobile/report/report_user"));
 app.use("/get_comments", require("./routes/mobile/comment/get_comments"));
 app.use("/get_messages", require("./routes/mobile/message/get_messages"));
 app.use("/get_message", require("./routes/mobile/message/get_message"));
+app.use(
+  "/get_message_by_id",
+  require("./routes/mobile/message/get_message_by_id")
+);
 app.use("/send_message", require("./routes/mobile/message/send_message"));
 app.use("/read_messages", require("./routes/mobile/message/read_messages"));
 app.use("/delete_message", require("./routes/mobile/message/delete_message"));

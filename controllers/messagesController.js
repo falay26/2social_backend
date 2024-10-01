@@ -85,6 +85,40 @@ const getMessage = async (req, res) => {
   }
 };
 
+const getMessageById = async (req, res) => {
+  const { user_id, other_user_id } = req.body;
+
+  try {
+    const message = await Message.find({
+      $or: [
+        {
+          fromUser: mongoose.Types.ObjectId(user_id),
+          toUser: mongoose.Types.ObjectId(other_user_id),
+        },
+        {
+          fromUser: mongoose.Types.ObjectId(other_user_id),
+          toUser: mongoose.Types.ObjectId(user_id),
+        },
+      ],
+    }).exec();
+    const last_deletes = message.cleared_by.filter(
+      (i) => i.user_id === user_id
+    );
+    const last_delete_date = last_deletes[last_deletes.length - 1].date;
+    const messages = message.messages
+      .filter((i) => i.date < last_delete_date)
+      .reverse();
+
+    res.status(200).json({
+      status: 200,
+      data: messages,
+      message: "Mesajlar başarıyla döndürüldü!",
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const sendMessage = async (req, res) => {
   const { message_id, message_sended } = req.body;
 
@@ -211,6 +245,7 @@ const deleteMessage = async (req, res) => {
 module.exports = {
   getAllMessages,
   getMessage,
+  getMessageById,
   sendMessage,
   readAllMessages,
   deleteMessage,
