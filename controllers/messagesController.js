@@ -77,7 +77,7 @@ const getMessage = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      data: messages,
+      data: messagesFormatter(messages, user_id),
       massage_id: message_id,
       message: "Mesajlar başarıyla döndürüldü!",
     });
