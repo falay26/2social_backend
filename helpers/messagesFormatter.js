@@ -10,6 +10,8 @@ const messagesFormatter = (array, user_id) => {
     let new_item = {
       photo: other_user.profile_picture,
       name: other_user.name,
+      other_user_id: other_user._id,
+      message_id: item?._id,
       message: item?.messages[item.messages.length - 1]?.content,
       dated: "22.10", //To be fixed
       unreadMessage: item.messages.filter((j) => !j.readed_by.includes(user_id))
