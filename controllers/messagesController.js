@@ -71,13 +71,12 @@ const getMessage = async (req, res) => {
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes.length - 1].date;
-    const messages = message?.messages
-      ?.filter((i) => i.date < last_delete_date)
-      .reverse();
+    const messages = message?.messages;
+    //?.filter((i) => i.date < last_delete_date)
 
     res.status(200).json({
       status: 200,
-      data: messagesFormatter(messages, user_id),
+      data: messages,
       massage_id: message_id,
       message: "Mesajlar başarıyla döndürüldü!",
     });
@@ -124,13 +123,12 @@ const getMessageById = async (req, res) => {
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes?.length - 1]?.date;
-    const messages = message[0]?.messages
-      ?.filter((i) => i.date < last_delete_date)
-      ?.reverse();
+    const messages = message[0]?.messages;
+    //?.filter((i) => i.date < last_delete_date)
 
     res.status(200).json({
       status: 200,
-      data: messagesFormatter(messages, user_id),
+      data: messages,
       massage_id: message[0]?._id,
       message: "Mesajlar başarıyla döndürüldü!",
     });
