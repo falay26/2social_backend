@@ -15,6 +15,8 @@ const {
   getDownloadURL,
   uploadBytes,
 } = require("firebase/storage");
+//Notification
+const NotificationService = require("../services/NotificationService");
 
 const createPost = async (req, res) => {
   const { content, image, users, category_id, public, user_id } = req.body;
@@ -82,11 +84,16 @@ const likePost = async (req, res) => {
       return;
     }
     post.likes = post.likes.concat([user_id]);
-    await post.save();
 
-    res.status(200).json({
-      status: 200,
-      message: `Gönderi başarı ile beğenildi!`,
+    const user = await User.findOne({ _id: post.owner_id });
+    const related_user = await User.findOne({ _id: user_id });
+    NotificationService("2", user, related_user, post, null, async () => {
+      await post.save();
+
+      res.status(200).json({
+        status: 200,
+        message: `Gönderi başarı ile beğenildi!`,
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -119,6 +126,21 @@ const unlikePost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  const { post_id } = req.body;
+
+  try {
+    await Post.deleteOne({ _id: post_id }).exec();
+
+    res.status(200).json({
+      status: 200,
+      message: `Gönderi başarı ile silindi!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const createComment = async (req, res) => {
   const { post_id, user_id, content } = req.body;
 
@@ -128,10 +150,17 @@ const createComment = async (req, res) => {
       user_id: user_id,
       content: content,
     });
+    const post = await Post.findOne({
+      _id: post_id,
+    }).exec();
 
-    res.status(200).json({
-      status: 200,
-      message: `Yorum başarı ile paylaşıldı!`,
+    const user = await User.findOne({ _id: post.owner_id });
+    const related_user = await User.findOne({ _id: user_id });
+    NotificationService("3", user, related_user, post, null, async () => {
+      res.status(200).json({
+        status: 200,
+        message: `Yorum başarı ile paylaşıldı!`,
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -422,6 +451,7 @@ module.exports = {
   createPost,
   likePost,
   unlikePost,
+  deletePost,
   createComment,
   likeComment,
   unlikeComment,

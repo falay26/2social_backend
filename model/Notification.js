@@ -13,6 +13,9 @@ const notificationSchema = new Schema(
     category_id: {
       type: ObjectId,
     },
+    post_id: {
+      type: ObjectId,
+    },
     type: {
       type: String,
     },

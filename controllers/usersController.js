@@ -15,6 +15,8 @@ const {
   getDownloadURL,
   uploadBytes,
 } = require("firebase/storage");
+//Notification
+const NotificationService = require("../services/NotificationService");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -267,11 +269,14 @@ const followUser = async (req, res) => {
       user.following = user.following.concat([followed_user_id]);
     }
 
-    await user.save();
+    const followed_user = await User.findOne({ _id: followed_user_id });
+    NotificationService("1", followed_user, user, null, null, async () => {
+      await user.save();
 
-    res.status(200).json({
-      status: 200, //TODO: maybe return user.
-      message: `Kullanıcı başarıyla takip edildi!`,
+      res.status(200).json({
+        status: 200, //TODO: maybe return user.
+        message: `Kullanıcı başarıyla takip edildi!`,
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -349,11 +354,14 @@ const inviteParticipant = async (req, res) => {
   const { user_id, invited_user_id, category_id } = req.body;
 
   try {
-    //TODO: send notification to invited_user_id
-
-    res.status(200).json({
-      status: 200,
-      message: `Kullanıcı başarıyla davet edildi!`,
+    const invited_user = await User.findOne({ _id: invited_user_id });
+    const user = await User.findOne({ _id: user_id });
+    const category = await Category.findOne({ _id: category_id });
+    NotificationService("4", invited_user, user, null, category, async () => {
+      res.status(200).json({
+        status: 200,
+        message: `Kullanıcı başarıyla davet edildi!`,
+      });
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });

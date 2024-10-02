@@ -36,6 +36,14 @@ const getNotifications = async (req, res) => {
           as: "category",
         },
       },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "post_id",
+          foreignField: "_id",
+          as: "post",
+        },
+      },
     ]);
 
     res.status(200).json({
