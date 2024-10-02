@@ -102,7 +102,7 @@ const getMessageById = async (req, res) => {
         },
       ],
     }).exec();
-    const last_deletes = message.cleared_by.filter(
+    const last_deletes = message?.cleared_by?.filter(
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes.length - 1].date;
