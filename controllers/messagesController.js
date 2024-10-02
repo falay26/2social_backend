@@ -71,8 +71,8 @@ const getMessage = async (req, res) => {
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes.length - 1].date;
-    const messages = message.messages
-      .filter((i) => i.date < last_delete_date)
+    const messages = message?.messages
+      ?.filter((i) => i.date < last_delete_date)
       .reverse();
 
     res.status(200).json({
@@ -105,7 +105,7 @@ const getMessageById = async (req, res) => {
     const last_deletes = message?.cleared_by?.filter(
       (i) => i.user_id === user_id
     );
-    const last_delete_date = last_deletes[last_deletes.length - 1].date;
+    const last_delete_date = last_deletes[last_deletes?.length - 1].date;
     const messages = message.messages
       .filter((i) => i.date < last_delete_date)
       .reverse();
