@@ -90,15 +90,33 @@ const getMessageById = async (req, res) => {
   const { user_id, other_user_id } = req.body;
 
   try {
-    const message = await Message.find({
+    let message = await Message.find({
       $or: [
         {
-          fromUser: mongoose.Types.ObjectId(user_id),
-          toUser: mongoose.Types.ObjectId(other_user_id),
+          sender_id: mongoose.Types.ObjectId(user_id),
+          reciever_id: mongoose.Types.ObjectId(other_user_id),
         },
         {
-          fromUser: mongoose.Types.ObjectId(other_user_id),
-          toUser: mongoose.Types.ObjectId(user_id),
+          sender_id: mongoose.Types.ObjectId(other_user_id),
+          reciever_id: mongoose.Types.ObjectId(user_id),
+        },
+      ],
+    }).exec();
+    if (!message) {
+      await Message.create({
+        sender_id: user_id,
+        reciever_id: other_user_id,
+      });
+    }
+    message = await Message.find({
+      $or: [
+        {
+          sender_id: mongoose.Types.ObjectId(user_id),
+          reciever_id: mongoose.Types.ObjectId(other_user_id),
+        },
+        {
+          sender_id: mongoose.Types.ObjectId(other_user_id),
+          reciever_id: mongoose.Types.ObjectId(user_id),
         },
       ],
     }).exec();
