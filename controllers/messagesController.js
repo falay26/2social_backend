@@ -130,8 +130,8 @@ const getMessageById = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      data: messages,
-      massage_id: message?._id,
+      data: messagesFormatter(messages, user_id),
+      massage_id: message[0]?._id,
       message: "Mesajlar başarıyla döndürüldü!",
     });
   } catch (err) {
