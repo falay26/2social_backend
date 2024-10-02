@@ -5,8 +5,8 @@ const messagesFormatter = (array, user_id) => {
     const item = array[i];
     let other_user =
       item.sender_info[0]._id === user_id
-        ? item.reciever_info[0]
-        : item.sender_info[0];
+        ? item.sender_info[0]
+        : item.reciever_info[0];
     let new_item = {
       photo: other_user.profile_picture,
       name: other_user.name,
