@@ -1,12 +1,6 @@
 const User = require("../model/User");
-//Twillio
-var accountSid = process.env.TWILIO_ACCOUNT_SID;
-var authToken = process.env.TWILIO_AUTH_TOKEN;
-
-const client = require("twilio")(accountSid, authToken, {
-  lazyLoading: true,
-});
-//Twillio
+//Services
+const OtpService = require("../services/OtpService");
 
 const handleNewUser = async (req, res) => {
   const { phone_code, phone, name, surname } = req.body;
@@ -24,14 +18,7 @@ const handleNewUser = async (req, res) => {
   try {
     let otp = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
 
-    client.messages
-      .create({
-        body: "Onay kodunuz: " + otp,
-        from: "+12542384391", //Change phone number..
-        to: phone_code + phone,
-      })
-      .then(() => {})
-      .catch(() => {});
+    OtpService(phone, "Onay kodunuz: " + otp);
 
     const user = await User.create({
       phone_code: phone_code,
@@ -90,14 +77,7 @@ const resendRegisterOtp = async (req, res) => {
     }).exec();
 
     let otp = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
-    client.messages
-      .create({
-        body: "Onay kodunuz: " + otp,
-        from: "+12542384391",
-        to: phone_code + phone,
-      })
-      .then(() => {})
-      .catch(() => {});
+    OtpService(phone, "Onay kodunuz: " + otp);
 
     user.register_otp = otp;
     await user.save();

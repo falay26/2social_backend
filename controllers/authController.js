@@ -1,5 +1,6 @@
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
+//Services
 const OtpService = require("../services/OtpService");
 
 const handleLogin = async (req, res) => {
@@ -337,14 +338,7 @@ const resendLoginOtp = async (req, res) => {
     }).exec();
 
     let otp = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-    client.messages
-      .create({
-        body: "Onay kodunuz: " + otp,
-        from: "+12542384391", //Change phone number..
-        to: phone_code + phone,
-      })
-      .then(() => {})
-      .catch(() => {});
+    OtpService(user.phone, "Onay kodunuz: " + otp);
 
     user.login_otp = otp;
     await user.save();
