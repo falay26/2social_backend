@@ -13,7 +13,7 @@ const messagesFormatter = (array, user_id) => {
       other_user_id: other_user?._id,
       message_id: item?._id,
       message: item?.messages[item.messages.length - 1]?.content,
-      dated: "22.10", //To be fixed
+      dated: item?.messages[item.messages.length - 1]?.date, //To be fixed
       unreadMessage: item.messages.filter((j) => !j.readed_by.includes(user_id))
         .length,
     };

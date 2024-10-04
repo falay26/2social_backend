@@ -101,7 +101,12 @@ const getMessageById = async (req, res) => {
         },
       ],
     }).exec();
-    if (message.length === 0) {
+    if (
+      message.length === 0 &&
+      other_user_id !== null &&
+      other_user_id !== undefined &&
+      other_user_id !== ""
+    ) {
       await Message.create({
         sender_id: user_id,
         reciever_id: other_user_id,
