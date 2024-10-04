@@ -4,7 +4,7 @@ const messagesFormatter = (array, user_id) => {
   for (let i = 0; i < array.length; i++) {
     const item = array[i];
     let other_user =
-      item.sender_info[0]._id === user_id
+      item.sender_info[0]._id !== user_id
         ? item.sender_info[0]
         : item.reciever_info[0];
     let new_item = {
