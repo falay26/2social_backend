@@ -35,7 +35,25 @@ const titleReturner = (type, user, category) => {
   }
   if (type === "6") {
     return {
+      tr: "Tebrikler!" + category.name.tr + " kategorisi tamamlandı.",
+      en: "",
+    };
+  }
+  if (type === "7") {
+    return {
       tr: user.name + " bir gönderi paylaştı.",
+      en: "",
+    };
+  }
+  if (type === "8") {
+    return {
+      tr: "Tebrikler! Artık premium üyesin.",
+      en: "",
+    };
+  }
+  if (type === "8") {
+    return {
+      tr: "Üyelik paketi bitti.",
       en: "",
     };
   }
@@ -68,7 +86,25 @@ const messageReturner = (type, user, category) => {
   }
   if (type === "6") {
     return {
+      tr: "Tebrikler!" + category.name.tr + " kategorisi tamamlandı.",
+      en: "",
+    };
+  }
+  if (type === "7") {
+    return {
       tr: user.name + " bir gönderi paylaştı.",
+      en: "",
+    };
+  }
+  if (type === "8") {
+    return {
+      tr: "Tebrikler! Artık premium üyesin.",
+      en: "",
+    };
+  }
+  if (type === "8") {
+    return {
+      tr: "Üyelik paketi bitti.",
       en: "",
     };
   }

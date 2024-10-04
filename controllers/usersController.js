@@ -209,6 +209,36 @@ const removeFavouriteCategory = async (req, res) => {
   }
 };
 
+const changeUsersPremium = async (req, res) => {
+  const { user_id, premium } = req.body;
+
+  try {
+    const user = await User.findOne({ _id: user_id });
+    user.premium = premium;
+
+    await user.save();
+
+    if (premium === true) {
+      NotificationService("8", user, null, null, null, async () => {
+        res.status(200).json({
+          status: 200,
+          message: `Kullanıcı premium bilgisi güncellendi!`,
+        });
+      });
+    }
+    if (premium === false) {
+      NotificationService("9", user, null, null, null, async () => {
+        res.status(200).json({
+          status: 200,
+          message: `Kullanıcı premium bilgisi güncellendi!`,
+        });
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
 const notificationPreference = async (req, res) => {
   const { user_id, preference } = req.body;
 
@@ -269,10 +299,10 @@ const followUser = async (req, res) => {
       user.following = user.following.concat([followed_user_id]);
     }
 
+    await user.save();
+
     const followed_user = await User.findOne({ _id: followed_user_id });
     NotificationService("1", followed_user, user, null, null, async () => {
-      await user.save();
-
       res.status(200).json({
         status: 200, //TODO: maybe return user.
         message: `Kullanıcı başarıyla takip edildi!`,
@@ -756,4 +786,5 @@ module.exports = {
   getSettings,
   addFavouriteCategory,
   removeFavouriteCategory,
+  changeUsersPremium,
 };

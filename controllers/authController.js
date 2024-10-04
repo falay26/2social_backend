@@ -1,13 +1,6 @@
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
-//Twillio
-var accountSid = process.env.TWILIO_ACCOUNT_SID;
-var authToken = process.env.TWILIO_AUTH_TOKEN;
-
-const client = require("twilio")(accountSid, authToken, {
-  lazyLoading: true,
-});
-//Twillio
+const OtpService = require("../services/OtpService");
 
 const handleLogin = async (req, res) => {
   const { phone_code, phone, pineapple } = req.body;
@@ -96,14 +89,7 @@ const handleLogin = async (req, res) => {
       });
     } else {
       let otp = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
-      client.messages
-        .create({
-          body: "Onay kodunuz: " + otp,
-          from: "+12542384391", //TODO: change
-          to: phone_code + phone,
-        })
-        .then(() => {})
-        .catch(() => {});
+      OtpService(foundUser.phone, "Onay kodunuz: " + otp);
 
       foundUser.login_otp = otp;
       await foundUser.save();

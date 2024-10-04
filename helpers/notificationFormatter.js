@@ -1,3 +1,70 @@
+const nameReturner = (item) => {
+  if (
+    item.type === "1" ||
+    item.type === "2" ||
+    item.type === "3" ||
+    item.type === "4" ||
+    item.type === "5" ||
+    item.type === "7"
+  ) {
+    return { tr: item.related_user[0].name, en: item.related_user[0].name };
+  }
+  if (item.type === "6" || item.type === "8") {
+    return { tr: "Tebrikler!", en: "Congratulations!" };
+  }
+  if (item.type === "9") {
+    return { tr: "Üyelik paketi bitti.", en: "Membership package has ended." };
+  }
+};
+
+const descReturner = (item) => {
+  if (item.type === "1") {
+    return { tr: " seni takip etti.", en: " followed you." };
+  }
+  if (item.type === "2") {
+    return { tr: " gönderini beğendi.", en: " liked your post." };
+  }
+  if (item.type === "3") {
+    return { tr: " gönderine yorum yaptı.", en: " commented on your post." };
+  }
+  if (item.type === "4") {
+    return {
+      tr: " seni " + item.category[0].name.tr + " etkinliğine etiketledi.",
+      en: " tagged you in " + item.category[0].name.en + " event.",
+    };
+  }
+  if (item.type === "5") {
+    return {
+      tr:
+        " " +
+        item.category[0].name.tr +
+        " kategorisini tamamladı. Hadi sen de tamamla.",
+      en:
+        " completed the category named" +
+        item.category[0].name.en +
+        ". Come on, complete it too.",
+    };
+  }
+  if (item.type === "6") {
+    return {
+      tr: " " + item.category[0].name.tr + " kategorisi tamamlandı.",
+      en: " category " + item.category[0].name.en + " is complete.",
+    };
+  }
+  if (item.type === "7") {
+    return { tr: " bir gönderi paylaştı.", en: " shared a post." };
+  }
+  if (item.type === "8") {
+    return {
+      tr: " Artık premium üyesin.",
+      en: " You are now a premium member.",
+    };
+  }
+  if (item.type === "9") {
+    return { tr: "", en: "" };
+  }
+};
+
 const notificationFormatter = (array, user) => {
   let new_array = [];
 
@@ -7,12 +74,15 @@ const notificationFormatter = (array, user) => {
       id: item?._id,
       type: item?.type,
       photo: item?.related_user[0]?.profile_picture,
-      icon: null,
-      name: item?.related_user[0]?.name,
-      desc: null,
+      icon: null, //Always null
+      name: nameReturner(item)[user?.preferred_language],
+      desc: descReturner(item)[user?.preferred_language],
       official: item?.related_user[0]?.premium,
       dateTime: item?.created_at,
       read: item?.readed,
+      other_user_id: item?.related_user[0]?._id,
+      category_id: item?.category[0]?._id,
+      post_id: item?.post[0]?._id,
     };
     new_array.push(new_item);
   }

@@ -8,9 +8,9 @@ const messagesFormatter = (array, user_id) => {
         ? item.sender_info[0]
         : item.reciever_info[0];
     let new_item = {
-      photo: other_user.profile_picture,
-      name: other_user.name,
-      other_user_id: other_user._id,
+      photo: other_user?.profile_picture,
+      name: other_user?.name,
+      other_user_id: other_user?._id,
       message_id: item?._id,
       message: item?.messages[item.messages.length - 1]?.content,
       dated: "22.10", //To be fixed

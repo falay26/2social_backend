@@ -117,6 +117,10 @@ app.use(
   "/change_profile_picture",
   require("./routes/mobile/user/change_profile_picture")
 );
+app.use(
+  "/change_users_premium",
+  require("./routes/mobile/user/change_users_premium")
+);
 app.use("/settings", require("./routes/mobile/user/settings"));
 app.use(
   "/add_favourite_category",

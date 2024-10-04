@@ -13,6 +13,7 @@
     "@firebase/app": "^0.10.9",
     "@firebase/storage": "^0.13.0",
     "@google-cloud/firestore": "^7.9.0",
+    "axios": "^1.7.7",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
