@@ -26,12 +26,14 @@ const createPost = async (req, res) => {
       status: 400,
       message: `category_id gönderilmesi zorunludur.`,
     });
+    return;
   }
   if (!user_id) {
     res.status(400).json({
       status: 400,
       message: `user_id gönderilmesi zorunludur.`,
     });
+    return;
   }
 
   try {
