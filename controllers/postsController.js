@@ -89,9 +89,8 @@ const likePost = async (req, res) => {
 
     const user = await User.findOne({ _id: post.owner_id });
     const related_user = await User.findOne({ _id: user_id });
+    await post.save();
     NotificationService("2", user, related_user, post, null, async () => {
-      await post.save();
-
       res.status(200).json({
         status: 200,
         message: `Gönderi başarı ile beğenildi!`,
