@@ -169,7 +169,7 @@ app.use("/delete_badge", require("./routes/admin/badge/delete"));
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
 
-app.use(verifyJWT);
+app.use(verifyJWT); 
 app.use("/users", require("./routes/api/users"));
 */
 
