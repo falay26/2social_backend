@@ -87,8 +87,8 @@ const likePost = async (req, res) => {
     }
     post.likes = post.likes.concat([user_id]);
 
-    const user = await User.findOne({ _id: post.owner_id });
-    const related_user = await User.findOne({ _id: user_id });
+    //const user = await User.findOne({ _id: post.owner_id });
+    //const related_user = await User.findOne({ _id: user_id });
     await post.save();
     res.status(200).json({
       status: 200,
