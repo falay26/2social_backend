@@ -137,7 +137,6 @@ const addToProfile = async (req, res) => {
         status: 400,
         message: `Bu post zaten profile eklenmiş!`,
       });
-      return;
     } else {
       user.added_posts = user.added_posts.concat([post_id]);
     }
@@ -163,7 +162,6 @@ const addFavouriteCategory = async (req, res) => {
         status: 400,
         message: `Bu kategori zaten favorilere eklenmiş!`,
       });
-      return;
     } else {
       user.favourite_categories = user.favourite_categories.concat([
         category_id,
@@ -195,7 +193,6 @@ const removeFavouriteCategory = async (req, res) => {
         status: 400,
         message: `Bu kategori zaten favorilerde değil!`,
       });
-      return;
     }
 
     await user.save();
@@ -250,7 +247,6 @@ const notificationPreference = async (req, res) => {
         notification_preference: user.notification_preference,
         message: `Kullanıcı bildirim tercihi döndürüldü!`,
       });
-      return;
     } else {
       user.notification_preference = preference;
 
@@ -294,12 +290,10 @@ const followUser = async (req, res) => {
         status: 400,
         message: `Bu kullanıcıyı zaten takip ediyorsun!`,
       });
-      return;
     } else {
       user.following = user.following.concat([followed_user_id]);
+      await user.save();
     }
-
-    await user.save();
 
     const followed_user = await User.findOne({ _id: followed_user_id });
     NotificationService("1", followed_user, user, null, null, async () => {
@@ -325,7 +319,6 @@ const unfollowUser = async (req, res) => {
         status: 400,
         message: `Bu kullanıcıyı zaten takip etmiyorsun!`,
       });
-      return;
     }
 
     await user.save();

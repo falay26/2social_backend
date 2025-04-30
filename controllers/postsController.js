@@ -26,14 +26,12 @@ const createPost = async (req, res) => {
       status: 400,
       message: `category_id gönderilmesi zorunludur.`,
     });
-    return;
   }
   if (!user_id) {
     res.status(400).json({
       status: 400,
       message: `user_id gönderilmesi zorunludur.`,
     });
-    return;
   }
 
   try {
@@ -83,18 +81,19 @@ const likePost = async (req, res) => {
         status: 400,
         message: `Gönderi zaten beğenilmiş!`,
       });
-      return;
-    }
-    post.likes = post.likes.concat([user_id]);
+    } else {
+      post.likes = post.likes.concat([user_id]);
 
-    //const user = await User.findOne({ _id: post.owner_id });
-    //const related_user = await User.findOne({ _id: user_id });
-    await post.save();
-    res.status(200).json({
-      status: 200,
-      message: `Gönderi başarı ile beğenildi!`,
-    });
+      //const user = await User.findOne({ _id: post.owner_id });
+      //const related_user = await User.findOne({ _id: user_id });
+      await post.save();
+      res.status(200).json({
+        status: 200,
+        message: `Gönderi başarı ile beğenildi!`,
+      });
+    }
     //NotificationService("2", user, related_user, post, null, async () => {});
+    //TODO: İncele
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
@@ -115,7 +114,6 @@ const unlikePost = async (req, res) => {
         status: 200,
         message: `Gönderi başarıyla unlike edildi!`,
       });
-      return;
     }
     res.status(400).json({
       status: 400,
@@ -180,7 +178,6 @@ const likeComment = async (req, res) => {
         status: 400,
         message: `Yorum zaten beğenilmiş!`,
       });
-      return;
     }
     comment.likes = comment.likes.concat([user_id]);
     await comment.save();
@@ -209,7 +206,6 @@ const unlikeComment = async (req, res) => {
         status: 200,
         message: `Yorum başarıyla unlike edildi!`,
       });
-      return;
     }
 
     res.status(400).json({
