@@ -129,7 +129,7 @@ const getMessageById = async (req, res) => {
     );
     const last_delete_date = last_deletes[last_deletes?.length - 1]?.date;
     const messages = message[0]?.messages?.filter(
-      (i) => i.date < last_delete_date
+      (i) => i.date > last_delete_date
     );
 
     res.status(200).json({
