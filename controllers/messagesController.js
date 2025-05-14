@@ -51,10 +51,18 @@ const getAllMessages = async (req, res) => {
         },
       },
     ]);
+    let finals = messages.filter((i) => {
+      const last_deletes = i?.cleared_by?.filter((j) => j.user_id === user_id);
+      const last_delete_date = last_deletes[last_deletes?.length - 1]?.date;
+      const messages_0 = i?.messages?.filter((j) => j.date > last_delete_date);
+      if (messages_0.length > 0) {
+        return i;
+      }
+    });
 
     res.status(200).json({
       status: 200,
-      data: messagesFormatter(messages, user_id),
+      data: messagesFormatter(finals, user_id),
       message: "Mesajlar başarıyla döndürüldü!",
     });
   } catch (err) {
@@ -71,8 +79,9 @@ const getMessage = async (req, res) => {
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes.length - 1].date;
-    const messages = message?.messages;
-    //?.filter((i) => i.date < last_delete_date)
+    const messages = message?.messages?.filter(
+      (i) => i.date > last_delete_date
+    );
 
     res.status(200).json({
       status: 200,
