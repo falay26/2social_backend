@@ -55,7 +55,11 @@ const getAllMessages = async (req, res) => {
       const last_deletes = i?.cleared_by?.filter((j) => j.user_id === user_id);
       const last_delete_date = last_deletes[last_deletes?.length - 1]?.date;
       const messages_0 = i?.messages?.filter((j) => j.date > last_delete_date);
-      if (messages_0.length > 0) {
+      if (
+        messages_0.length > 0 ||
+        i.cleared_by.length === 0 ||
+        i?.cleared_by?.filter((j) => j.user_id === user_id).length === 0
+      ) {
         return i;
       }
     });
