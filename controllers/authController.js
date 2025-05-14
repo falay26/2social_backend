@@ -93,7 +93,6 @@ const handleLogin = async (req, res) => {
         foundUser.login_otp = "12345";
         await foundUser.save();
       } else {
-        console.log(foundUser.phone);
         let otp = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
         OtpService(foundUser.phone, "Onay kodunuz: " + otp);
 

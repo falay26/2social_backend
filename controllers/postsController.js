@@ -228,7 +228,11 @@ const getTimeline = async (req, res) => {
             {
               $match: {
                 _id: { $exists: true },
-                owner_id: { $nin: user.blockeds.concat(user_id) },
+                owner_id: {
+                  $nin: user.blockeds
+                    .map((i) => mongoose.Types.ObjectId(i))
+                    .concat(mongoose.Types.ObjectId(user_id)),
+                },
               },
             },
             {
@@ -262,7 +266,11 @@ const getTimeline = async (req, res) => {
             {
               $match: {
                 _id: { $exists: true },
-                owner_id: { $nin: user.blockeds.concat(user_id) },
+                owner_id: {
+                  $nin: user.blockeds
+                    .map((i) => mongoose.Types.ObjectId(i))
+                    .concat(mongoose.Types.ObjectId(user_id)),
+                },
                 category_id: mongoose.Types.ObjectId(category_id),
               },
             },
