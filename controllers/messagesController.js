@@ -128,8 +128,9 @@ const getMessageById = async (req, res) => {
       (i) => i.user_id === user_id
     );
     const last_delete_date = last_deletes[last_deletes?.length - 1]?.date;
-    const messages = message[0]?.messages;
-    //?.filter((i) => i.date < last_delete_date)
+    const messages = message[0]?.messages?.filter(
+      (i) => i.date < last_delete_date
+    );
 
     res.status(200).json({
       status: 200,
