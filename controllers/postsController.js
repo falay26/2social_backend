@@ -218,7 +218,7 @@ const unlikeComment = async (req, res) => {
 };
 
 const getTimeline = async (req, res) => {
-  const { user_id, category_id } = req.body;
+  const { user_id, category_id, index } = req.body;
 
   try {
     const user = await User.findOne({ _id: user_id });
@@ -259,9 +259,12 @@ const getTimeline = async (req, res) => {
                 as: "category",
               },
             },
-          ]).sort({
-            created_at: -1,
-          })
+          ])
+            .sort({
+              created_at: -1,
+            })
+            .skip(index * 10)
+            .limit((index + 1) * 10)
         : await Post.aggregate([
             {
               $match: {
@@ -298,9 +301,12 @@ const getTimeline = async (req, res) => {
                 as: "category",
               },
             },
-          ]).sort({
-            created_at: -1,
-          });
+          ])
+            .sort({
+              created_at: -1,
+            })
+            .skip(index * 10)
+            .limit((index + 1) * 10);
 
     res.status(200).json({
       status: 200,
