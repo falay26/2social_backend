@@ -638,7 +638,7 @@ const selectActivity = async (req, res) => {
       let new_sub_category = all_sub_categories[random - 1];
 
       user.in_sub_categories = user.in_sub_categories.concat([
-        new_sub_category._id,
+        { category_id: category_id, sub_category_id: new_sub_category._id },
       ]);
 
       user.markModified("in_cetagories");
@@ -666,7 +666,15 @@ const acceptActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    user.in_sub_categories = user.in_sub_categories.concat([sub_category_id]);
+    if (
+      user.in_sub_categories.filter(
+        (i) => i.sub_category_id === sub_category_id
+      ).length === 0
+    ) {
+      user.in_sub_categories = user.in_sub_categories.concat([
+        { category_id: category_id, sub_category_id: sub_category_id._id },
+      ]);
+    }
 
     if (!user.in_categories.includes(category_id)) {
       user.in_categories = user.in_categories.concat([category_id]);
