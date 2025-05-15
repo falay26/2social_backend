@@ -150,11 +150,6 @@ const NotificationService = async (
       body: messageReturner(type, related_user, category)[
         user.preferred_language
       ],
-      data: {
-        related_user: related_user?._id,
-        post: post?._id,
-        category: category?._id,
-      },
     },
   };
 

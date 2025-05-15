@@ -83,17 +83,18 @@ const likePost = async (req, res) => {
       });
     } else {
       post.likes = post.likes.concat([user_id]);
-
-      //const user = await User.findOne({ _id: post.owner_id });
-      //const related_user = await User.findOne({ _id: user_id });
       await post.save();
-      res.status(200).json({
-        status: 200,
-        message: `Gönderi başarı ile beğenildi!`,
+
+      const user = await User.findOne({ _id: post.owner_id });
+      const related_user = await User.findOne({ _id: user_id });
+
+      NotificationService("2", user, related_user, post, null, async () => {
+        res.status(200).json({
+          status: 200,
+          message: `Gönderi başarı ile beğenildi!`,
+        });
       });
     }
-    //NotificationService("2", user, related_user, post, null, async () => {});
-    //TODO: İncele
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
   }
