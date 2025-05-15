@@ -199,7 +199,9 @@ const getCategoryDetail = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: user_id });
-    const sub_categories = await SubCategory.find({ category_id: category_id });
+    const sub_categories = await SubCategory.find({
+      category_id: mongoose.Types.ObjectId(category_id),
+    });
     const participants = await User.find({
       _id: {
         $in: user.in_sub_categories

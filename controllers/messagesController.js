@@ -118,11 +118,18 @@ const getMessageById = async (req, res) => {
       message.length === 0 &&
       other_user_id !== null &&
       other_user_id !== undefined &&
-      other_user_id !== ""
+      other_user_id !== "" &&
+      user_id !== other_user_id
     ) {
       await Message.create({
         sender_id: user_id,
         reciever_id: other_user_id,
+      });
+    }
+    if (user_id === other_user_id) {
+      res.status(400).json({
+        status: 400,
+        message: "Kendine mesaj gönderemezsin!",
       });
     }
     message = await Message.find({

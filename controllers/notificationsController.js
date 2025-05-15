@@ -13,6 +13,7 @@ const getNotifications = async (req, res) => {
   const { user_id } = req.body;
 
   try {
+    const user = await User.findOne({ _id: user_id }).exec();
     const notifications = await Notification.aggregate([
       {
         $match: {
@@ -49,7 +50,7 @@ const getNotifications = async (req, res) => {
     res.status(200).json({
       status: 200,
       message: "Bildirimler başarıyla bulundu!",
-      data: notificationFormatter(notifications),
+      data: notificationFormatter(notifications, user),
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });

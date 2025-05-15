@@ -7,12 +7,10 @@ const nameReturner = (item) => {
     item.type === "5" ||
     item.type === "7"
   ) {
-    return { tr: item.related_user[0].name, en: item.related_user[0].name };
-  }
-  if (item.type === "6" || item.type === "8") {
+    return { tr: item?.related_user[0]?.name, en: item?.related_user[0]?.name };
+  } else if (item.type === "6" || item.type === "8") {
     return { tr: "Tebrikler!", en: "Congratulations!" };
-  }
-  if (item.type === "9") {
+  } else if (item.type === "9") {
     return { tr: "Üyelik paketi bitti.", en: "Membership package has ended." };
   }
 };
@@ -20,20 +18,16 @@ const nameReturner = (item) => {
 const descReturner = (item) => {
   if (item.type === "1") {
     return { tr: " seni takip etti.", en: " followed you." };
-  }
-  if (item.type === "2") {
+  } else if (item.type === "2") {
     return { tr: " gönderini beğendi.", en: " liked your post." };
-  }
-  if (item.type === "3") {
+  } else if (item.type === "3") {
     return { tr: " gönderine yorum yaptı.", en: " commented on your post." };
-  }
-  if (item.type === "4") {
+  } else if (item.type === "4") {
     return {
       tr: " seni " + item.category[0].name.tr + " etkinliğine etiketledi.",
       en: " tagged you in " + item.category[0].name.en + " event.",
     };
-  }
-  if (item.type === "5") {
+  } else if (item.type === "5") {
     return {
       tr:
         " " +
@@ -44,23 +38,19 @@ const descReturner = (item) => {
         item.category[0].name.en +
         ". Come on, complete it too.",
     };
-  }
-  if (item.type === "6") {
+  } else if (item.type === "6") {
     return {
       tr: " " + item.category[0].name.tr + " kategorisi tamamlandı.",
       en: " category " + item.category[0].name.en + " is complete.",
     };
-  }
-  if (item.type === "7") {
+  } else if (item.type === "7") {
     return { tr: " bir gönderi paylaştı.", en: " shared a post." };
-  }
-  if (item.type === "8") {
+  } else if (item.type === "8") {
     return {
       tr: " Artık premium üyesin.",
       en: " You are now a premium member.",
     };
-  }
-  if (item.type === "9") {
+  } else if (item.type === "9") {
     return { tr: "", en: "" };
   }
 };
@@ -84,6 +74,9 @@ const notificationFormatter = (array, user) => {
       category_id: item?.category[0]?._id,
       post_id: item?.post[0]?._id,
     };
+    console.log(nameReturner(item));
+    console.log(descReturner(item)[user?.preferred_language]);
+    console.log(user?.preferred_language);
     new_array.push(new_item);
   }
 
