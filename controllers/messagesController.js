@@ -180,7 +180,7 @@ const sendMessage = async (req, res) => {
     if (message.messages.length === 0) {
     }
     var message1 = {
-      to: reciever_user.notification_token,
+      token: reciever_user.notification_token,
       notification: {
         title: "2Social",
         body: sender_user.name + " sana mesaj gönderdi⚡️",
