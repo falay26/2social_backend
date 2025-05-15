@@ -1,5 +1,4 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./social-a163c-firebase-adminsdk-2t4nx-c1f7b01ca6.json");
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -131,17 +130,21 @@ const NotificationService = async (
   related_user,
   post,
   category,
-  onDone
+  onDone,
+  speacial,
+  speacialMsg
 ) => {
-  await Notification.create({
-    user_id: user?._id,
-    related_user_id: related_user?._id,
-    category_id: category?._id,
-    post_id: post?._id,
-    type: type,
-    title: titleReturner(type, related_user, category, post),
-    message: messageReturner(type, related_user, category, post),
-  });
+  if (!speacial) {
+    await Notification.create({
+      user_id: user?._id,
+      related_user_id: related_user?._id,
+      category_id: category?._id,
+      post_id: post?._id,
+      type: type,
+      title: titleReturner(type, related_user, category, post),
+      message: messageReturner(type, related_user, category, post),
+    });
+  }
 
   var notif_message = {
     token: user?.notification_token,
@@ -153,7 +156,11 @@ const NotificationService = async (
     },
   };
 
-  admin.messaging().send(notif_message);
+  if (speacial) {
+    admin.messaging().send(speacialMsg);
+  } else {
+    admin.messaging().send(notif_message);
+  }
 
   onDone();
 };

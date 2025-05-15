@@ -3,9 +3,7 @@ const Message = require("../model/Message");
 const mongoose = require("mongoose");
 const Jimp = require("jimp");
 //Notification
-var FCM = require("fcm-node");
-var serverKey = process.env.FIREBASE_SERVER_KEY;
-var fcm = new FCM(serverKey);
+const NotificationService = require("../services/NotificationService");
 //Formatters
 const messagesFormatter = require("../helpers/messagesFormatter");
 //Storage
@@ -189,11 +187,16 @@ const sendMessage = async (req, res) => {
       },
     };
 
-    fcm.send(message1, function (err, response) {
-      if (err) {
-      } else {
-      }
-    });
+    NotificationService(
+      "8",
+      sender_user,
+      null,
+      null,
+      null,
+      async () => {},
+      true,
+      message1
+    );
 
     message_sended.date = new Date();
     message.messages = message.messages.concat([message_sended]);
