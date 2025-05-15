@@ -600,7 +600,7 @@ const selectActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    let olds = user?.in_categories.map((i) => i);
+    let olds = user?.in_categories;
     if (olds?.length === 0) {
       let all_sub_categories = await SubCategories.find({
         category_id: mongoose.Types.ObjectId(category_id),
