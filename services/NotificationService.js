@@ -76,17 +76,17 @@ const titleReturner = (type, user, category) => {
 
 const messageReturner = (type, user, category) => {
   if (type === "1") {
-    return { tr: " seni takip etti.", en: "" };
+    return { tr: user.name + " seni takip etti.", en: "" };
   }
   if (type === "2") {
-    return { tr: " gönderini beğendi.", en: "" };
+    return { tr: user.name + " gönderini beğendi.", en: "" };
   }
   if (type === "3") {
-    return { tr: " gönderine yorum yaptı.", en: "" };
+    return { tr: user.name + " gönderine yorum yaptı.", en: "" };
   }
   if (type === "4") {
     return {
-      tr: " seni " + category.name.tr + " etkinliğine etiketledi.",
+      tr: user.name + " seni " + category.name.tr + " etkinliğine etiketledi.",
       en: "",
     };
   }
