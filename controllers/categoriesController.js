@@ -217,7 +217,7 @@ const getCategoryDetail = async (req, res) => {
       )[0]?.sub_categories,
       sub_categories: sub_categories.filter((i) =>
         user.in_sub_categories
-          .filter((i) => i.category_id === category_id)[0]
+          .filter((j) => j.category_id === category_id)[0]
           ?.sub_categories.includes(i._id)
       ),
       participants: participants,
