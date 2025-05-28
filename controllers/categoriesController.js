@@ -218,7 +218,7 @@ const getCategoryDetail = async (req, res) => {
       sub_categories: sub_categories.filter((i) =>
         user.in_sub_categories
           .filter((j) => j.category_id === category_id)[0]
-          ?.sub_categories.includes(i._id)
+          ?.sub_categories.includes(i._id.toString())
       ),
       participants: participants,
       message: `Kategoriler başarı ile döndürüldü!`,
