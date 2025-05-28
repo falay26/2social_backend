@@ -12,7 +12,7 @@ const categoryFormatter = (array, user, id, types) => {
         desc: item?.description[user?.preferred_language],
         step: user?.in_sub_categories.filter(
           (i) => i.category_id === item?._id.toString()
-        )?.sub_categories?.length,
+        )[0]?.sub_categories?.length,
         total: item?.step_number,
         photoCount: item?.posts?.length,
         reminder: item?.reminder,
