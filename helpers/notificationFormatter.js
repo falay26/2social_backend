@@ -74,9 +74,6 @@ const notificationFormatter = (array, user) => {
       category_id: item?.category[0]?._id,
       post_id: item?.post[0]?._id,
     };
-    console.log(nameReturner(item));
-    console.log(descReturner(item)[user?.preferred_language]);
-    console.log(user?.preferred_language);
     new_array.push(new_item);
   }
 

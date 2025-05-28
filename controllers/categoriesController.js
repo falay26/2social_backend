@@ -205,10 +205,8 @@ const getCategoryDetail = async (req, res) => {
     const participants = await User.find({
       _id: {
         $in: user.in_sub_categories
-          .filter((i) => i.category_id === category_id)
-          .map((i) => {
-            return i.participants.map((j) => mongoose.Types.ObjectId(j));
-          }),
+          .filter((i) => i.category_id === category_id)[0]
+          .participants.map((j) => mongoose.Types.ObjectId(j)),
       },
     });
 
@@ -217,11 +215,7 @@ const getCategoryDetail = async (req, res) => {
       user_finished: user.in_sub_categories.filter(
         (i) => i.category_id === category_id
       )[0]?.sub_categories,
-      sub_categories: sub_categories.filter((i) =>
-        user.in_sub_categories
-          .filter((j) => j.category_id === category_id)[0]
-          ?.sub_categories.includes(i?._id?.toString())
-      ),
+      sub_categories: sub_categories,
       participants: participants,
       message: `Kategoriler başarı ile döndürüldü!`,
     });

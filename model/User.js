@@ -67,6 +67,10 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
+    blocked_bys: {
+      type: Array,
+      default: [],
+    },
     badges: {
       type: Array,
       default: [],

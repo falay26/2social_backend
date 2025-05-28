@@ -406,9 +406,15 @@ const acceptParticipant = async (req, res) => {
         message: `Kullanıcı zaten katılımcı olarak ekli!`,
       });
     } else {
-      user.in_sub_categories = user.in_sub_categories
-        .filter((i) => i.category_id === category_id)[0]
-        .participants.push(invited_user_id);
+      user.in_sub_categories = user.in_sub_categories.map((i) => {
+        if (i.category_id === category_id) {
+          let new_item = i;
+          new_item.participants.push(invited_user_id);
+          return new_item;
+        } else {
+          return i;
+        }
+      });
     }
 
     await user.save();
@@ -432,9 +438,17 @@ const removeParticipant = async (req, res) => {
         .filter((i) => i.category_id === category_id)[0]
         .participants.includes(invited_user_id)
     ) {
-      user.in_sub_categories = user.in_sub_categories
-        .filter((i) => i.category_id === category_id)[0]
-        .participants.filter((j) => j !== invited_user_id);
+      user.in_sub_categories = user.in_sub_categories.map((i) => {
+        if (i.category_id === category_id) {
+          let new_item = i;
+          new_item.participants = new_item.participants.filter(
+            (j) => j !== invited_user_id
+          );
+          return new_item;
+        } else {
+          return i;
+        }
+      });
     } else {
       res.status(400).json({
         status: 400,
@@ -529,6 +543,7 @@ const blockUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: user_id });
+    const blocked_user = await User.findOne({ _id: blocked_user_id });
 
     if (user.blockeds.includes(blocked_user_id)) {
       res.status(400).json({
@@ -537,6 +552,12 @@ const blockUser = async (req, res) => {
       });
     } else {
       user.blockeds = user.blockeds.concat([blocked_user_id]);
+      if (blocked_user) {
+        if (!blocked_user.blocked_bys.includes(user_id)) {
+          blocked_user.blocked_bys = blocked_user.blocked_bys.concat([user_id]);
+          await blocked_user.save();
+        }
+      }
       await user.save();
 
       res.status(200).json({
@@ -554,9 +575,18 @@ const unblockUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: user_id });
+    const blocked_user = await User.findOne({ _id: blocked_user_id });
 
     if (user.blockeds.includes(blocked_user_id)) {
       user.blockeds = user.blockeds.filter((i) => i !== blocked_user_id);
+      if (blocked_user) {
+        if (blocked_user.blocked_bys.includes(user_id)) {
+          blocked_user.blocked_bys = blocked_user.blocked_bys.filter(
+            (i) => i !== user_id
+          );
+          await blocked_user.save();
+        }
+      }
       await user.save();
 
       res.status(200).json({
@@ -600,7 +630,7 @@ const selectActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    let olds = user?.in_categories;
+    let olds = user?.in_categories.filter((i) => i === category_id);
     if (olds?.length === 0) {
       let all_sub_categories = await SubCategories.find({
         category_id: mongoose.Types.ObjectId(category_id),
@@ -608,42 +638,25 @@ const selectActivity = async (req, res) => {
       let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
       let new_sub_category = all_sub_categories[random - 1];
 
-      user.in_sub_categories = user.in_sub_categories.concat([
-        {
-          category_id: category_id,
-          participants: [],
-          sub_categories: [new_sub_category._id],
-        },
-      ]);
-      user.in_categories = [category_id];
-
-      user.markModified("in_categories");
-      user.markModified("in_sub_categories");
-      await user.save();
-
       res.status(201).json({
         status: 201,
         sub_category: new_sub_category,
         new: true,
-        step_amount: 1,
-        message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez giriyor)`,
+        step_amount: 0,
+        message: `Kullanıcı kategoriye ilk kez girecek!`,
       });
     } else {
       let all_sub_categories = await SubCategories.find({
-        _id: {
-          $nin: olds.filter((i) => i === category_id),
-        },
+        category_id: mongoose.Types.ObjectId(category_id),
       });
-      let random = Math.floor(Math.random() * all_sub_categories.length) + 1;
-      let new_sub_category = all_sub_categories[random - 1];
-
-      user.in_sub_categories = user.in_sub_categories.concat([
-        { category_id: category_id, sub_category_id: new_sub_category._id },
-      ]);
-
-      user.markModified("in_cetagories");
-      user.markModified("in_sub_cetagories");
-      await user.save();
+      let nin_sub_categories = all_sub_categories.filter(
+        (i) =>
+          !user.in_sub_categories
+            .filter((j) => j.category_id === category_id)[0]
+            .sub_categories.includes(i._id)
+      );
+      let random = Math.floor(Math.random() * nin_sub_categories.length) + 1;
+      let new_sub_category = nin_sub_categories[random - 1];
 
       res.status(200).json({
         status: 200,
@@ -651,8 +664,8 @@ const selectActivity = async (req, res) => {
         new: false,
         step_amount: user.in_sub_categories.filter(
           (i) => i.category_id === category_id
-        ).length,
-        message: `Kullanıcı alt başlığa başarıyla eklendi! (İlk kez girmiyor)`,
+        )[0].sub_categories.length,
+        message: `Kullanıcı alt başlığa ilk kez girmiyor`,
       });
     }
   } catch (err) {
@@ -666,18 +679,28 @@ const acceptActivity = async (req, res) => {
   try {
     const user = await User.findOne({ _id: user_id });
 
-    if (
-      user.in_sub_categories.filter(
-        (i) => i.sub_category_id === sub_category_id
-      ).length === 0
-    ) {
+    let olds = user?.in_categories.filter((i) => i === category_id);
+    if (olds.length === 0) {
       user.in_sub_categories = user.in_sub_categories.concat([
-        { category_id: category_id, sub_category_id: sub_category_id._id },
+        {
+          category_id: category_id,
+          sub_categories: [sub_category_id],
+          participants: [],
+        },
       ]);
-    }
-
-    if (!user.in_categories.includes(category_id)) {
       user.in_categories = user.in_categories.concat([category_id]);
+    } else {
+      user.in_sub_categories = user.in_sub_categories.map((i) => {
+        if (i.category_id !== category_id) {
+          return i;
+        } else {
+          let new_obj = i;
+          new_obj.sub_categories = new_obj.sub_categories.concat([
+            sub_category_id,
+          ]);
+          return new_obj;
+        }
+      });
     }
 
     user.markModified("in_cetagories");

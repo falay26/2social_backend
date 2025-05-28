@@ -232,7 +232,10 @@ const getTimeline = async (req, res) => {
                 owner_id: {
                   $nin: user.blockeds
                     .map((i) => mongoose.Types.ObjectId(i))
-                    .concat(mongoose.Types.ObjectId(user_id)),
+                    .concat(mongoose.Types.ObjectId(user_id))
+                    .concat(
+                      user.blocked_bys.map((j) => mongoose.Types.ObjectId(j))
+                    ),
                 },
               },
             },
