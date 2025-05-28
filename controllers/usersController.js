@@ -690,7 +690,7 @@ const acceptActivity = async (req, res) => {
       ]);
       user.in_categories = user.in_categories.concat([category_id]);
 
-      user.markModified("in_cetagories");
+      user.markModified("in_categories");
       user.markModified("in_sub_categories");
       await user.save();
     } else {
