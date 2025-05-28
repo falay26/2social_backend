@@ -689,8 +689,11 @@ const acceptActivity = async (req, res) => {
         },
       ]);
       user.in_categories = user.in_categories.concat([category_id]);
+
+      user.markModified("in_cetagories");
+      user.markModified("in_sub_cetagories");
+      await user.save();
     } else {
-      console.log("Girdi!");
       user.in_sub_categories = user.in_sub_categories.map((i) => {
         if (i.category_id !== category_id) {
           return i;
@@ -699,15 +702,13 @@ const acceptActivity = async (req, res) => {
           new_obj.sub_categories = new_obj.sub_categories.concat([
             sub_category_id,
           ]);
-          console.log(new_obj);
           return new_obj;
         }
       });
-    }
 
-    user.markModified("in_cetagories");
-    user.markModified("in_sub_cetagories");
-    await user.save();
+      user.markModified("in_sub_cetagories");
+      await user.save();
+    }
 
     res.status(200).json({
       status: 200,
