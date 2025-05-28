@@ -690,6 +690,7 @@ const acceptActivity = async (req, res) => {
       ]);
       user.in_categories = user.in_categories.concat([category_id]);
     } else {
+      console.log("Girdi!");
       user.in_sub_categories = user.in_sub_categories.map((i) => {
         if (i.category_id !== category_id) {
           return i;
@@ -698,6 +699,7 @@ const acceptActivity = async (req, res) => {
           new_obj.sub_categories = new_obj.sub_categories.concat([
             sub_category_id,
           ]);
+          console.log(new_obj);
           return new_obj;
         }
       });
