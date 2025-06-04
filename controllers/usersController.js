@@ -734,7 +734,7 @@ const getFollowings = async (req, res) => {
 
     res.status(200).json({
       status: 200,
-      users: userFormatter(users, 0), //TODO: dummy.
+      users: userFormatter(users, 0),
       message: `Takip edilenler başarıyla döndürüldü!`,
     });
   } catch (err) {

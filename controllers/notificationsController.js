@@ -45,7 +45,11 @@ const getNotifications = async (req, res) => {
           as: "post",
         },
       },
-    ]);
+    ])
+      .sort({
+        created_at: -1,
+      })
+      .limit(30);
 
     res.status(200).json({
       status: 200,
@@ -63,7 +67,7 @@ const readNotifications = async (req, res) => {
   try {
     const notifications = await Notification.updateMany(
       {
-        owner_id: mongoose.Types.ObjectId(user_id),
+        user_id: mongoose.Types.ObjectId(user_id),
       },
       {
         readed: true,
