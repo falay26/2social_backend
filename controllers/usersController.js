@@ -710,8 +710,13 @@ const acceptActivity = async (req, res) => {
       await user.save();
     }
 
+    const other_users = await User.find({
+      "in_sub_categories.sub_categories": sub_category_id,
+    });
+
     res.status(200).json({
       status: 200,
+      other_users: userFormatter(other_users, 0),
       message: `Kullanıcı alt başlığa başarıyla eklendi!`,
     });
   } catch (err) {
@@ -757,6 +762,34 @@ const getUsersCategories = async (req, res) => {
       status: 200,
       categories: categoryFormatter(categories, user, 2),
       message: `Kullanıcının bulunduğu kategoriler başarıyla döndürüldü!`,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 500, message: err.message });
+  }
+};
+
+const doneCategories = async (req, res) => {
+  const { user_id } = req.body;
+
+  try {
+    let user = await User.findOne({ _id: user_id });
+    let categories = await Category.find({
+      _id: {
+        $in: user.in_categories.map((i) => mongoose.Types.ObjectId(i)),
+      },
+    });
+    let done_categories = categories.filter(
+      (i) =>
+        i.step_number ===
+        user.in_sub_categories.filter(
+          (j) => j.category_id === i._id.toString()
+        )[0]?.sub_categories?.length
+    );
+
+    res.status(200).json({
+      status: 200,
+      done_categories: categoryFormatter(done_categories, user, 2),
+      message: `Kullanıcının bitirdiği kategoriler başarıyla döndürüldü!`,
     });
   } catch (err) {
     res.status(500).json({ status: 500, message: err.message });
@@ -814,4 +847,5 @@ module.exports = {
   addFavouriteCategory,
   removeFavouriteCategory,
   changeUsersPremium,
+  doneCategories,
 };

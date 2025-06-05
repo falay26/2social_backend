@@ -133,6 +133,7 @@ const startServer = () => {
     require("./routes/mobile/user/remove_favourite_category")
   );
   app.use("/get_user", require("./routes/mobile/user/get_user"));
+  app.use("/done_categories", require("./routes/mobile/user/done_categories"));
 
   //For Admin
   //Users
