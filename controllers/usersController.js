@@ -712,6 +712,12 @@ const acceptActivity = async (req, res) => {
 
     const other_users = await User.find({
       "in_sub_categories.sub_categories": sub_category_id,
+      _id: {
+        $nin: user.blockeds
+          .map((i) => mongoose.Types.ObjectId(i))
+          .concat(mongoose.Types.ObjectId(user_id))
+          .concat(user.blocked_bys.map((j) => mongoose.Types.ObjectId(j))),
+      },
     });
 
     res.status(200).json({
